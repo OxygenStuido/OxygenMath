@@ -22,6 +22,25 @@ namespace OxygenMath
         }
 
         /**
+         * @brief 计算点到直线的距离
+         *
+         * 通过给定直线上的两个点确定一条直线，计算指定点到该直线的垂直距离。
+         * 使用直线的一般式方程 Ax + By + C = 0 来计算距离。
+         *
+         * @param point 待计算距离的点坐标
+         * @param linePoint1 直线上的第一个点坐标
+         * @param linePoint2 直线上的第二个点坐标
+         * @return 返回点到直线的垂直距离，结果为非负实数
+         */
+        static Real distance(const Vec2 &point, const Vec2 &linePoint1, const Vec2 &linePoint2)
+        {
+            Real A = linePoint2(1) - linePoint1(1);
+            Real B = linePoint1(0) - linePoint2(0);
+            Real C = linePoint2(0) * linePoint1(1) - linePoint1(0) * linePoint2(1);
+
+            return abs(A * point(0) + B * point(1) + C) / sqrt(A * A + B * B);
+        }
+        /**
          * @brief 将二维向量绕原点旋转指定角度
          * @param point 待旋转的二维向量
          * @param radius 旋转角度（弧度制）
@@ -116,25 +135,6 @@ namespace OxygenMath
             return distance(p1, p2) + distance(p2, p3) + distance(p3, p1);
         }
 
-        /**
-         * @brief 计算点到直线的距离
-         *
-         * 通过给定直线上的两个点确定一条直线，计算指定点到该直线的垂直距离。
-         * 使用直线的一般式方程 Ax + By + C = 0 来计算距离。
-         *
-         * @param point 待计算距离的点坐标
-         * @param linePoint1 直线上的第一个点坐标
-         * @param linePoint2 直线上的第二个点坐标
-         * @return 返回点到直线的垂直距离，结果为非负实数
-         */
-        static Real pointToLineDistance(const Vec2 &point, const Vec2 &linePoint1, const Vec2 &linePoint2)
-        {
-            Real A = linePoint2(1) - linePoint1(1);
-            Real B = linePoint1(0) - linePoint2(0);
-            Real C = linePoint2(0) * linePoint1(1) - linePoint1(0) * linePoint2(1);
-
-            return abs(A * point(0) + B * point(1) + C) / sqrt(A * A + B * B);
-        }
         /**
          * @brief 获取线段交点
          *

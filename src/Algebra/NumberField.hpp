@@ -17,7 +17,7 @@ namespace OxygenMath
     {
     public:
 
-        // // 数域需保持加法 减法 乘法 除法
+        // // 数域需满足加法 减法 乘法 除法
         // T add(const T &other) const { return static_cast<const T *>(this)->add(other); }
         // T sub(const T &other) const { return static_cast<const T *>(this)->sub(other); }
         // T mul(const T &other) const { return static_cast<const T *>(this)->mul(other); }
