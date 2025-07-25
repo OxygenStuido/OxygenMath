@@ -17,6 +17,6 @@ namespace OxygenMath
     private:
         size_t row_size;
         size_t col_size;
-        std::vector<NumberField<T>> data;
+        std::vector<T> data;
     };
 }
