@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <cmath>
 #include "NumberField.hpp"
 namespace OxygenMath
 {
@@ -110,6 +111,26 @@ namespace OxygenMath
         void Transpose()
         {
             is_row = !is_row;
+        }
+
+        real EuclideanNorm()
+        {
+            double sum = 0;
+            for (const auto &value : data)
+            {
+                sum += (value * value).norm();
+            }
+            return std::pow(sum,0.5);
+        }
+
+        real ManhattanNorm()
+        {
+            real sum = 0;
+            for (const auto &value : data)
+            {
+                sum += value.norm();
+            }
+            return sum;
         }
 
     private:

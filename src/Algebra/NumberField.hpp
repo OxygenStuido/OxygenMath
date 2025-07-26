@@ -6,12 +6,16 @@ namespace OxygenMath
     {
     public:
         double data;
-        real() : data(0.0) {} // Default constructor
+        real() : data(0.0) {}
         real(const double &a) : data(a) {}
 
         static real zero() { return real(0.0); }
         static real identity() { return real(1.0); }
 
+        real norm()
+        {
+            return data;
+        }
         friend std::ostream &operator<<(std::ostream &os, const real &c)
         {
             os << c.data;
@@ -22,11 +26,14 @@ namespace OxygenMath
         real operator+(const real &other) const { return real(data + other.data); }
         real operator-(const real &other) const { return real(data - other.data); }
         real operator*(const real &other) const { return real(data * other.data); }
-        real operator/(const real &other) const 
-        { 
-            if (other.data != 0.0) {
+        real operator/(const real &other) const
+        {
+            if (other.data != 0.0)
+            {
                 return real(data / other.data);
-            } else {
+            }
+            else
+            {
                 throw std::invalid_argument("Division by zero");
             }
         }
