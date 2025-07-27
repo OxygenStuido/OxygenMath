@@ -4,137 +4,119 @@
 #include "NumberField.hpp"
 namespace OxygenMath
 {
-    // template <typename T>
-    // class Vector
-    // {
-    // public:
-    //     Vector() : size(0) {}
-    //     Vector(size_t size) : size(size), data(size, T()) {}
 
-    //     // Access element at index i
-    //     T &operator[](size_t i)
-    //     {
-    //         if (i >= size)
-    //         {
-    //             throw std::out_of_range("Index out of range");
-    //         }
-    //         return data[i];
-    //     }
+    template <typename T>
+    class Vector
+    {
+        static_assert(std::is_base_of<NumberField<T>, T>::value,
+                      "Vector<T> requires T to inherit from NumberField<T>");
 
-    //     const T &operator[](size_t i) const
-    //     {
-    //         if (i >= size)
-    //         {
-    //             throw std::out_of_range("Index out of range");
-    //         }
-    //         return data[i];
-    //     }
+    private:
+        std::vector<T> data;
+        bool is_row = true;
 
-    //     // Get the size of the vector
-    //     size_t getSize() const
-    //     {
-    //         return size;
-    //     }
+    public:
+        size_t size() const { return data.size(); }
 
-    //     // Vector addition
-    //     Vector<T> operator+(const Vector<T> &other) const
-    //     {
-    //         if (size != other.size)
-    //         {
-    //             throw std::invalid_argument("Vectors must be of the same size");
-    //         }
-    //         Vector<T> result(size);
-    //         for (size_t i = 0; i < size; ++i)
-    //         {
-    //             result[i] = data[i] + other.data[i];
-    //         }
-    //         return result;
-    //     }
+        Vector(size_t n = 0) : data(n) {}
+        Vector(const std::initializer_list<T> &list) : data(list) {}
 
-    //     // Vector subtraction
-    //     Vector<T> operator-(const Vector<T> &other) const
-    //     {
-    //         if (size != other.size)
-    //         {
-    //             throw std::invalid_argument("Vectors must be of the same size");
-    //         }
-    //         Vector<T> result(size);
-    //         for (size_t i = 0; i < size; ++i)
-    //         {
-    //             result[i] = data[i] - other.data[i];
-    //         }
-    //         return result;
-    //     }
+        const T &operator[](size_t i) const
+        {
+            return data[i];
+        }
 
-    //     // Scalar multiplication
-    //     friend Vector<T> operator*(const T &scalar, const Vector<T> &vec)
-    //     {
-    //         Vector<T> result(vec.size);
-    //         for (size_t i = 0; i < vec.size; ++i)
-    //         {
-    //             result[i] = vec.data[i] * scalar;
-    //         }
-    //         return result;
-    //     }
+        T &operator[](size_t i)
+        {
+            return data[i];
+        }
 
-    //     Vector<T> operator*(const T &scalar)
-    //     {
-    //         Vector<T> result(size);
-    //         for (size_t i = 0; i < size; ++i)
-    //         {
-    //             result[i] = data[i] * scalar;
-    //         }
-    //         return result;
-    //     }
+        // 向量加法：Vector + Vector
+        Vector<T> operator+(const Vector<T> &other) const
+        {
+            if (size() != other.size())
+                throw std::invalid_argument("Vector size mismatch in addition");
 
-    //     // Friend function to allow output streaming
-    //     friend std::ostream &operator<<(std::ostream &os, const Vector<T> &v)
-    //     {
-    //         os << "[";
-    //         for (size_t i = 0; i < v.size; ++i)
-    //         {
-    //             os << v.data[i];
-    //             if (i != v.size - 1)
-    //             {
-    //                 os << ", ";
-    //             }
-    //         }
-    //         os << "]";
-    //         if (!v.is_row)
-    //         {
-    //             std::cout << "^T";
-    //         }
-    //         return os;
-    //     }
+            Vector<T> result(size());
+            for (size_t i = 0; i < size(); ++i)
+                result[i] = data[i] + other.data[i]; // 使用 operator+
+            return result;
+        }
 
-    //     void Transpose()
-    //     {
-    //         is_row = !is_row;
-    //     }
+        // 向量减法：Vector - Vector
+        Vector<T> operator-(const Vector<T> &other) const
+        {
+            if (size() != other.size())
+                throw std::invalid_argument("Vector size mismatch in subtraction");
 
-    //     real EuclideanNorm()
-    //     {
-    //         double sum = 0;
-    //         for (const auto &value : data)
-    //         {
-    //             sum += (value * value).norm();
-    //         }
-    //         return std::pow(sum,0.5);
-    //     }
+            Vector<T> result(size());
+            for (size_t i = 0; i < size(); ++i)
+                result[i] = data[i] - other.data[i];
+            return result;
+        }
 
-    //     real ManhattanNorm()
-    //     {
-    //         real sum = 0;
-    //         for (const auto &value : data)
-    //         {
-    //             sum += value.norm();
-    //         }
-    //         return sum;
-    //     }
+        // 向量标量乘法：Vector * Scalar
+        Vector<T> operator*(const T &scalar) const
+        {
+            Vector<T> result(size());
+            for (size_t i = 0; i < size(); ++i)
+                result[i] = data[i] * scalar;
+            return result;
+        }
 
-    // private:
-    //     bool is_row = true; // It indicates whether the vector is a row vector; if not, it is a column vector
-    //     size_t size;
-    //     std::vector<T> data;
-    // };
+        // 向量标量乘法：Scalar * Vector
+        friend Vector<T> operator*(const T &scalar, const Vector<T> &vec)
+        {
+            Vector<T> result(vec.size());
+            for (size_t i = 0; i < vec.size(); ++i)
+                result[i] = vec.data[i] * scalar;
+            return result;
+        }
+
+        // 向量点积：Vector * Vector
+        T dot(const Vector<T> &other) const
+        {
+            if (size() != other.size())
+                throw std::invalid_argument("Vector size mismatch in dot product");
+
+            T result = T::zero();
+            for (size_t i = 0; i < size(); ++i)
+                result = result + data[i] * other.data[i];
+            return result;
+        }
+
+        // 向量转置
+        void transpose()
+        {
+            is_row = !is_row;
+        }
+
+        // L2 范数：sqrt(sum(x_i^2))
+        T l2_norm() const
+        {
+            T sum = T::zero();
+            for (const auto &val : data)
+            {
+                sum = sum + val * val;
+            }
+            return sum.sqrt();
+        }
+
+        friend std::ostream &operator<<(std::ostream &os, const Vector<T> &vec)
+        {
+            os << "[ ";
+            for (size_t i = 0; i < vec.size(); ++i)
+            {
+                os << vec.data[i];
+                if (i != vec.size() - 1)
+                    os << ", ";
+            }
+            os << " ]";
+            if (!vec.is_row)
+            {
+                os << "^T";
+            }
+            return os;
+        }
+    };
 }
