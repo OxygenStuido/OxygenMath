@@ -14,10 +14,13 @@ void testReal()
     std::cout << "a - b = " << a - b << std::endl;
     std::cout << "a * b = " << a * b << std::endl;
     std::cout << "a / b = " << a / b << std::endl;
-    // if (a > b)
-    // {
-    //     std::cout << " a > b" << std::endl;
-    // }
+
+    std::cout << "a > b : " << (a > b) << std::endl;
+    std::cout << "a >= b : " << (a >= b) << std::endl;
+    std::cout << "a < b : " << (a < b) << std::endl;
+    std::cout << "a <= b : " << (a <= b) << std::endl;
+    std::cout << "a == b : " << (a == b) << std::endl;
+    std::cout << "-a : " << -a << std::endl;
     std::cout << "=========Real test=========" << std::endl;
     test_pass_count++;
 }

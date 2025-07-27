@@ -69,12 +69,6 @@ namespace OxygenMath
         {
             return lhs.div(rhs);
         }
-
-
-        // friend T operator-(const T &rhs)
-        // {
-        //     return rhs.neg();
-        // }
     };
     class Real : public NumberField<Real>
     {
@@ -100,12 +94,12 @@ namespace OxygenMath
             return Real(data / other.data);
         }
 
-        // bool gte(const Real &lhs, const Real &rhs) const { return lhs.data >= rhs.data; }
-        // bool greater(const Real &lhs, const Real &rhs) const { return lhs.data > rhs.data; }
-        // bool lte(const Real &lhs, const Real &rhs) const { return lhs.data <= rhs.data; }
-        // bool less(const Real &lhs, const Real &rhs) const { return lhs.data < rhs.data; }
-        // bool equal(const Real &lhs, const Real &rhs) const { return lhs.data == rhs.data; }
-        // Real neg(const Real &rhs) const { return Real(-data); }
+        bool operator>=(const Real &rhs) const { return data >= rhs.data; }
+        bool operator>(const Real &rhs) const { return data > rhs.data; }
+        bool operator<=(const Real &rhs) const { return data <= rhs.data; }
+        bool operator<(const Real &rhs) const { return data < rhs.data; }
+        bool operator==(const Real &rhs) const { return data == rhs.data; }
+        Real operator-() { return Real(-data); }
 
         Real sqrt() const
         {
