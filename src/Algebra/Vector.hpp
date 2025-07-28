@@ -147,18 +147,6 @@ namespace OxygenMath
             is_row = !is_row;
         }
 
-        // L2 范数：sqrt(sum(x_i^2))
-        /*! \brief 计算向量L2范数（欧几里得范数）
-         * \return 范数结果
-         */
-        T l2_norm() const
-        {
-            T sum = T::zero();
-            for (const auto &val : data)
-                sum = sum + val * val;
-            return sqrt(sum);
-        }
-
         /*! \brief 输出向量到流
          * \param os 输出流
          * \param vec 向量
