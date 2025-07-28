@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <cmath>
+#include "AlgebraTool.hpp"
 #include "NumberField.hpp"
 namespace OxygenMath
 {
@@ -99,7 +100,7 @@ namespace OxygenMath
             {
                 sum = sum + val * val;
             }
-            return sum.sqrt();
+            return sqrt(sum);
         }
 
         friend std::ostream &operator<<(std::ostream &os, const Vector<T> &vec)

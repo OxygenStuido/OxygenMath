@@ -10,65 +10,22 @@ namespace OxygenMath
     public:
         virtual ~NumberField() = default;
 
-        // 数域需保持加法
-        T add(const T &other) const
-        {
-            return static_cast<const T *>(this)->add(other);
-        }
-
-        // 数域需保持减法
-        T sub(const T &other) const
-        {
-            return static_cast<const T *>(this)->sub(other);
-        }
-
-        // 数域需保持乘法
-        T mul(const T &other) const
-        {
-            return static_cast<const T *>(this)->mul(other);
-        }
-
-        // 数域需保持除法
-        T div(const T &other) const
-        {
-            return static_cast<const T *>(this)->div(other);
-        }
-
-        // 支持 sqrt() 函数以提供L2范数
-        T sqrt() const { return static_cast<const T *>(this)->sqrt(); }
-
-        // bool gte(const T &other) const { return static_cast<const T *>(this)->gte(other); }
-        // bool greater(const T &other) const { return static_cast<const T *>(this)->greater(other); }
-        // bool lte(const T &other) const { return static_cast<const T *>(this)->lte(other); }
-        // bool less(const T &other) const { return static_cast<const T *>(this)->less(other); }
-        // bool equal(const T &other) const { return static_cast<const T *>(this)->equal(other); }
-        // T neg() const { return static_cast<const T *>(this)->neg(); }
+        // 数域需保持加法 减法 乘法 除法
+        T add(const T &other) const { return static_cast<const T *>(this)->add(other); }
+        T sub(const T &other) const { return static_cast<const T *>(this)->sub(other); }
+        T mul(const T &other) const { return static_cast<const T *>(this)->mul(other); }
+        T div(const T &other) const { return static_cast<const T *>(this)->div(other); }
 
         // 数域一定包含零元
         static T zero() { return T::zero(); }
-
         // 数域一定包含单位元
         static T identity() { return T::identity(); }
 
-        friend T operator+(const T &lhs, const T &rhs)
-        {
-            return lhs.add(rhs);
-        }
-
-        friend T operator-(const T &lhs, const T &rhs)
-        {
-            return lhs.sub(rhs);
-        }
-
-        friend T operator*(const T &lhs, const T &rhs)
-        {
-            return lhs.mul(rhs);
-        }
-
-        friend T operator/(const T &lhs, const T &rhs)
-        {
-            return lhs.div(rhs);
-        }
+        // 操作符重载
+        friend T operator+(const T &lhs, const T &rhs) { return lhs.add(rhs); }
+        friend T operator-(const T &lhs, const T &rhs) { return lhs.sub(rhs); }
+        friend T operator*(const T &lhs, const T &rhs) { return lhs.mul(rhs); }
+        friend T operator/(const T &lhs, const T &rhs) { return lhs.div(rhs); }
     };
     class Real : public NumberField<Real>
     {
@@ -79,13 +36,10 @@ namespace OxygenMath
 
         // Real + Real
         Real add(const Real &other) const { return Real(data + other.data); }
-
         // Real - Real
         Real sub(const Real &other) const { return Real(data - other.data); }
-
         // Real * Real
         Real mul(const Real &other) const { return Real(data * other.data); }
-
         // Real / Real
         Real div(const Real &other) const
         {
@@ -94,13 +48,15 @@ namespace OxygenMath
             return Real(data / other.data);
         }
 
+        // 逻辑运算符重载
         bool operator>=(const Real &rhs) const { return data >= rhs.data; }
         bool operator>(const Real &rhs) const { return data > rhs.data; }
         bool operator<=(const Real &rhs) const { return data <= rhs.data; }
         bool operator<(const Real &rhs) const { return data < rhs.data; }
         bool operator==(const Real &rhs) const { return data == rhs.data; }
         Real operator-() { return Real(-data); }
-
+ 
+        // 支持 sqrt() 函数以提供L2范数
         Real sqrt() const
         {
             if (data < 0.0)
@@ -156,7 +112,7 @@ namespace OxygenMath
             double i = (imag * other.real - real * other.imag) / denom;
             return Complex(r, i);
         }
-
+        
         Complex sqrt() const
         {
             double r = std::sqrt(std::sqrt(real * real + imag * imag));
