@@ -54,8 +54,8 @@ namespace OxygenMath
         bool operator<=(const Real &rhs) const { return data <= rhs.data; }
         bool operator<(const Real &rhs) const { return data < rhs.data; }
         bool operator==(const Real &rhs) const { return data == rhs.data; }
-        Real operator-() { return Real(-data); }
- 
+        friend Real operator-(const Real &real) { return Real(-real.data); }
+
         // 支持 sqrt() 函数以提供L2范数
         Real sqrt() const
         {
@@ -112,7 +112,7 @@ namespace OxygenMath
             double i = (imag * other.real - real * other.imag) / denom;
             return Complex(r, i);
         }
-        
+
         Complex sqrt() const
         {
             double r = std::sqrt(std::sqrt(real * real + imag * imag));
