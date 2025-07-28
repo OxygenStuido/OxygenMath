@@ -173,6 +173,21 @@ namespace OxygenMath
                 return true;
             return false;
         }
+
+        auto begin() { return data.begin(); }
+        auto end() { return data.end(); }
+
+        // 添加常用操作
+        bool empty() const { return data.empty(); }
+        void resize(size_t n) { data.resize(n); }
+        void clear() { data.clear(); }
+
+        // 交换操作
+        void swap(Vector &other) noexcept
+        {
+            std::swap(data, other.data);
+            std::swap(is_row, other.is_row);
+        }
     };
 
     /*! \brief 实数向量特化类
@@ -362,6 +377,21 @@ namespace OxygenMath
             if (v1.dot(v2) < Constants::epsilon)
                 return true;
             return false;
+        }
+
+        auto begin() { return data.begin(); }
+        auto end() { return data.end(); }
+
+        // 添加常用操作
+        bool empty() const { return data.empty(); }
+        void resize(size_t n) { data.resize(n); }
+        void clear() { data.clear(); }
+
+        // 交换操作
+        void swap(Vector &other) noexcept
+        {
+            std::swap(data, other.data);
+            std::swap(is_row, other.is_row);
         }
     };
 
