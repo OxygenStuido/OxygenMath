@@ -15,6 +15,4 @@ namespace OxygenMath
         double theta = std::atan2(num.imag, num.real) / 2.0;
         return Complex(r * std::cos(theta), r * std::sin(theta));
     }
-
-    
 }

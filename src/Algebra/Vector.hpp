@@ -174,8 +174,11 @@ namespace OxygenMath
             return false;
         }
 
-        auto begin() { return data.begin(); }
-        auto end() { return data.end(); }
+        // std::vector<T>::iterator gin() { return data.begin(); }
+        // std::vector<T>::iterator end() { return data.end(); }
+
+        auto begin() -> decltype(data.begin()) { return data.begin(); }
+        auto end() -> decltype(data.end()) { return data.end(); }
 
         // 添加常用操作
         bool empty() const { return data.empty(); }
@@ -190,6 +193,7 @@ namespace OxygenMath
         }
     };
 
+    ////////////////////////////////////////////////////////
     /*! \brief 实数向量特化类
      */
     template <>
@@ -379,8 +383,11 @@ namespace OxygenMath
             return false;
         }
 
-        auto begin() { return data.begin(); }
-        auto end() { return data.end(); }
+        // std::vector<Real>::iterator begin() { return data.begin(); }decltype
+        // std::vector<Real>::iterator end() { return data.end(); }
+
+        auto begin() -> decltype(data.begin()) { return data.begin(); }
+        auto end() -> decltype(data.end()) { return data.end(); }
 
         // 添加常用操作
         bool empty() const { return data.empty(); }

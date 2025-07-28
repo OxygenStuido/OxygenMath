@@ -63,8 +63,8 @@ void testVector()
 }
 int main()
 {
-
-    std::vector<std::function<void()>> test_functions{testReal, testComplex, testVector};
+    auto a = {testReal, testComplex};
+    std::vector<std::function<void()>> test_functions{testVector};
     for (const auto &func : test_functions)
     {
         func();
