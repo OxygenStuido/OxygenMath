@@ -135,8 +135,20 @@ namespace OxygenMath
                 throw std::invalid_argument("Vector size mismatch in dot product");
 
             T result = T::zero();
-            for (size_t i = 0; i < size(); ++i)
+            size_t i = 0;
+
+            // 循环展开4次
+            for (; i + 3 < size(); i += 4)
+            {
+                result = result + data[i] * other.data[i] + data[i + 1] * other.data[i + 1] + data[i + 2] * other.data[i + 2] + data[i + 3] * other.data[i + 3];
+            }
+
+            // 处理剩余元素
+            for (; i < size(); ++i)
+            {
                 result = result + data[i] * other.data[i];
+            }
+
             return result;
         }
 
@@ -321,9 +333,30 @@ namespace OxygenMath
             if (size() != other.size())
                 throw std::invalid_argument("Vector size mismatch in dot product");
 
-            Real result = Real::zero();
-            for (size_t i = 0; i < size(); ++i)
-                result = result + data[i] * other.data[i];
+            // 使用多个累加器减少数据依赖
+            Real sum0 = Real::zero();
+            Real sum1 = Real::zero();
+            Real sum2 = Real::zero();
+            Real sum3 = Real::zero();
+
+            size_t i = 0;
+            for (; i + 3 < size(); i += 4)
+            {
+                sum0 += data[i] * other.data[i];
+                sum1 += data[i + 1] * other.data[i + 1];
+                sum2 += data[i + 2] * other.data[i + 2];
+                sum3 += data[i + 3] * other.data[i + 3];
+            }
+
+            // 合并累加器
+            Real result = sum0 + sum1 + sum2 + sum3;
+
+            // 处理剩余元素
+            for (; i < size(); ++i)
+            {
+                result += data[i] * other.data[i];
+            }
+
             return result;
         }
 

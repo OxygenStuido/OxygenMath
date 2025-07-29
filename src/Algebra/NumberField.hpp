@@ -27,6 +27,7 @@ namespace OxygenMath
         friend T operator*(const T &lhs, const T &rhs) { return lhs.mul(rhs); }
         friend T operator/(const T &lhs, const T &rhs) { return lhs.div(rhs); }
     };
+
     class Real : public NumberField<Real>
     {
     public:
@@ -47,7 +48,29 @@ namespace OxygenMath
                 throw std::invalid_argument("Division by zero");
             return Real(data / other.data);
         }
-
+        // 复合赋值运算符
+        Real &operator+=(const Real &other)
+        {
+            data += other.data;
+            return *this;
+        }
+        Real &operator-=(const Real &other)
+        {
+            data -= other.data;
+            return *this;
+        }
+        Real &operator*=(const Real &other)
+        {
+            data *= other.data;
+            return *this;
+        }
+        Real &operator/=(const Real &other)
+        {
+            if (other.data == 0.0)
+                throw std::invalid_argument("Division by zero");
+            data /= other.data;
+            return *this;
+        }
         // 逻辑运算符重载
         bool operator>=(const Real &rhs) const { return data >= rhs.data; }
         bool operator>(const Real &rhs) const { return data > rhs.data; }
@@ -112,13 +135,49 @@ namespace OxygenMath
             double i = (imag * other.real - real * other.imag) / denom;
             return Complex(r, i);
         }
+        // 复合赋值运算符
+        Complex &operator+=(const Complex &other)
+        {
+            real += other.real;
+            imag += other.imag;
+            return *this;
+        }
 
+        Complex &operator-=(const Complex &other)
+        {
+            real -= other.real;
+            imag -= other.imag;
+            return *this;
+        }
+
+        Complex &operator*=(const Complex &other)
+        {
+            double r = real * other.real - imag * other.imag;
+            double i = real * other.imag + imag * other.real;
+            real = r;
+            imag = i;
+            return *this;
+        }
+
+        Complex &operator/=(const Complex &other)
+        {
+            double denom = other.real * other.real + other.imag * other.imag;
+            if (denom == 0.0)
+                throw std::invalid_argument("Division by zero");
+
+            double r = (real * other.real + imag * other.imag) / denom;
+            double i = (imag * other.real - real * other.imag) / denom;
+            real = r;
+            imag = i;
+            return *this;
+        }
         Complex sqrt() const
         {
             double r = std::sqrt(std::sqrt(real * real + imag * imag));
             double theta = std::atan2(imag, real) / 2.0;
             return Complex(r * std::cos(theta), r * std::sin(theta));
         }
+
         static Complex zero() { return Complex(0.0, 0.0); }
         static Complex identity() { return Complex(1.0, 0.0); }
 
