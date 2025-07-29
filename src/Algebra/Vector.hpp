@@ -4,6 +4,9 @@
 #include "AlgebraTool.hpp"
 #include "NumberField.hpp"
 #include "../Constants.hpp"
+/*
+    动态向量
+*/
 namespace OxygenMath
 {
     /*! \brief 向量模板类，支持基本线性代数运算
@@ -26,9 +29,6 @@ namespace OxygenMath
         size_t size() const { return data.size(); }
 
         /*! \brief 构造指定大小的向量
-         * \param n 向量大小
-         */
-        /*! \brief 构造指定大小的实数向量
          * \param n 向量大小
          */
         Vector(size_t n = 0) : data(n) {}
@@ -62,9 +62,9 @@ namespace OxygenMath
             if (size() != other.size())
                 throw std::invalid_argument("Vector size mismatch in addition");
 
-            Vector<T> result(*this);
+            Vector<T> result(size());
             for (size_t i = 0; i < size(); ++i)
-                result[i] += other.data[i]; // 使用 operator+
+                result[i] = data[i] + other.data[i];
             return result;
         }
 
@@ -79,9 +79,9 @@ namespace OxygenMath
             if (size() != other.size())
                 throw std::invalid_argument("Vector size mismatch in subtraction");
 
-            Vector<T> result(*this);
+            Vector<T> result(size());
             for (size_t i = 0; i < size(); ++i)
-                result[i] -= other.data[i];
+                result[i] = data[i] - other.data[i];
             return result;
         }
 
@@ -92,9 +92,9 @@ namespace OxygenMath
          */
         Vector<T> operator*(const T &scalar) const
         {
-            Vector<T> result(*this);
+            Vector<T> result(size());
             for (size_t i = 0; i < size(); ++i)
-                result[i] *= scalar;
+                result[i] = data[i] * scalar;
             return result;
         }
 
@@ -106,9 +106,9 @@ namespace OxygenMath
          */
         friend Vector<T> operator*(const T &scalar, const Vector<T> &vec)
         {
-            Vector<T> result(vec);
+            Vector<T> result(vec.size());
             for (size_t i = 0; i < vec.size(); ++i)
-                result[i] *= scalar;
+                result[i] = vec.data[i] * scalar;
             return result;
         }
 
@@ -117,9 +117,9 @@ namespace OxygenMath
          */
         Vector<T> operator-() const
         {
-            Vector<T> result(*this);
+            Vector<T> result(size());
             for (size_t i = 0; i < size(); ++i)
-                result[i] *= -1;
+                result[i] = -data[i];
             return result;
         }
 
@@ -181,7 +181,7 @@ namespace OxygenMath
 
         static bool checkOrthogonality(const Vector &v1, const Vector &v2)
         {
-            if (v1.dot(v2) < Constants::epsilon)
+            if (abs(v1.dot(v2)) < Constants::epsilon)
                 return true;
             return false;
         }
@@ -249,9 +249,9 @@ namespace OxygenMath
             if (size() != other.size())
                 throw std::invalid_argument("Vector size mismatch in addition");
 
-            Vector<Real> result(*this);
+            Vector<Real> result(size());
             for (size_t i = 0; i < size(); ++i)
-                result[i] += other.data[i]; // 使用 operator+
+                result[i] = data[i] + other.data[i];
             return result;
         }
 
@@ -266,9 +266,9 @@ namespace OxygenMath
             if (size() != other.size())
                 throw std::invalid_argument("Vector size mismatch in subtraction");
 
-            Vector<Real> result(*this);
+            Vector<Real> result(size());
             for (size_t i = 0; i < size(); ++i)
-                result[i] -= other.data[i];
+                result[i] = data[i] - other.data[i];
             return result;
         }
 
@@ -279,9 +279,9 @@ namespace OxygenMath
          */
         Vector<Real> operator*(const Real &scalar) const
         {
-            Vector<Real> result(*this);
+            Vector<Real> result(size());
             for (size_t i = 0; i < size(); ++i)
-                result[i] *= scalar;
+                result[i] = data[i] * scalar;
             return result;
         }
 
@@ -293,9 +293,9 @@ namespace OxygenMath
          */
         friend Vector<Real> operator*(const Real &scalar, const Vector<Real> &vec)
         {
-            Vector<Real> result(vec);
+            Vector<Real> result(vec.size());
             for (size_t i = 0; i < vec.size(); ++i)
-                result[i] *= scalar;
+                result[i] = vec.data[i] * scalar;
             return result;
         }
 
@@ -304,9 +304,9 @@ namespace OxygenMath
          */
         Vector<Real> operator-() const
         {
-            Vector<Real> result(*this);
+            Vector<Real> result(size());
             for (size_t i = 0; i < size(); ++i)
-                result[i] *= -1;
+                result[i] = -data[i];
             return result;
         }
 
@@ -315,10 +315,10 @@ namespace OxygenMath
          */
         Vector<Real> l2_normalization() const
         {
-            Vector<Real> result(*this);
+            Vector<Real> result(size());
             Real norm = this->l2_norm();
             for (size_t i = 0; i < size(); ++i)
-                result[i] /= norm;
+                result[i] = data[i] / norm;
             return result;
         }
 
@@ -411,7 +411,7 @@ namespace OxygenMath
 
         static bool checkOrthogonality(const Vector &v1, const Vector &v2)
         {
-            if (v1.dot(v2) < Constants::epsilon)
+            if (abs(v1.dot(v2)) < Constants::epsilon)
                 return true;
             return false;
         }
