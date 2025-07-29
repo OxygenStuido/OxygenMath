@@ -298,4 +298,166 @@ namespace OxygenMath
             return false;
         }
     };
+
+    template <typename T>
+    class Vec2 : public VectorN<T, 2>
+    {
+    public:
+        // 继承基类构造函数
+        using VectorN<T, 2>::VectorN;
+
+        T getX() const { return (*this)[0]; }
+        T getY() const { return (*this)[1]; }
+        // 叉积
+        T cross(const Vec2 &v) const
+        {
+            static_assert(std::is_same<T, Real>::value,
+                          "Cross product requires Real type");
+            return (*this)[0] * v[1] - (*this)[1] * v[0];
+        }
+
+        // 长度计算
+        T length() const { return this->l2_norm(); }
+        T lengthSquare() const { return this->l2_normSquare(); }
+
+        Vec2 normalized() const { return this->l2_normalization(); }
+    };
+
+    template <typename T>
+    class Vec3 : public VectorN<T, 3>
+    {
+    public:
+        // 继承基类构造函数
+        using VectorN<T, 3>::VectorN;
+        // 叉积
+        T cross(const Vec3 &v) const
+        {
+            static_assert(std::is_same<T, Real>::value,
+                          "Cross product requires Real type");
+            return Vec3((*this)[1] * v[2] - (*this)[2] * v[1],
+                        (*this)[2] * v[0] - (*this)[0] * v[2],
+                        (*this)[0] * v[1] - (*this)[1] * v[0]);
+        }
+
+        T getX() const { return (*this)[0]; }
+        T getY() const { return (*this)[1]; }
+        T getZ() const { return (*this)[2]; }
+
+        T length() const { return this->l2_norm(); }
+        T lengthSquare() const { return this->l2_normSquare(); }
+
+        Vec3 normalized() const { return this->l2_normalization(); }
+    };
+
+    template <typename T>
+    class Vec4 : public VectorN<T, 4>
+    {
+    public:
+        // 继承基类构造函数
+        using VectorN<T, 4>::VectorN;
+
+        // 叉积
+        T cross(const Vec4 &v) const
+        {
+            static_assert(std::is_same<T, Real>::value,
+                          "Cross product requires Real type");
+            return Vec4((*this)[1] * v[2] - (*this)[2] * v[1],
+                        (*this)[2] * v[0] - (*this)[0] * v[2],
+                        (*this)[0] * v[1] - (*this)[1] * v[0],
+                        T::zero()); // 4D向量的叉积结果在第四维为零
+        }
+        T getX() const { return (*this)[0]; }
+        T getY() const { return (*this)[1]; }
+        T getZ() const { return (*this)[2]; }
+        T getW() const { return (*this)[3]; }
+
+        T length() const { return this->l2_norm(); }
+        T lengthSquare() const { return this->l2_normSquare(); }
+
+        Vec4 normalized() const { return this->l2_normalization(); }
+    };
+
+    template <>
+    class Vec2<Real> : public VectorN<Real, 2>
+    {
+    public:
+        // 构造函数优化
+        Vec2() : VectorN<Real, 2>({Real::zero(), Real::zero()}) {}
+        Vec2(Real x, Real y) : VectorN<Real, 2>({x, y}) {}
+
+        // 高性能叉积
+        Real cross(const Vec2 &v) const
+        {
+            return (*this)[0] * v[1] - (*this)[1] * v[0];
+        }
+
+        Real length() const
+        {
+            return sqrt((*this)[0] * (*this)[0] + (*this)[1] * (*this)[1]);
+        }
+
+        Vec2 rotate(Real angle) const
+        {
+            Real cost = cos(angle), sint = sin(angle);
+            return {
+                (*this)[0] * cost - (*this)[1] * sint,
+                (*this)[0] * sint + (*this)[1] * cost};
+        }
+        Real getX() const { return (*this)[0]; }
+        Real getY() const { return (*this)[1]; }
+    };
+
+    template <>
+    class Vec3<Real> : public VectorN<Real, 3>
+    {
+    public:
+        // 构造函数
+        Vec3() : VectorN<Real, 3>({Real::zero(), Real::zero(), Real::zero()}) {}
+        Vec3(Real x, Real y, Real z) : VectorN<Real, 3>({x, y, z}) {}
+
+        // 叉积
+        Vec3 cross(const Vec3 &v) const
+        {
+            return Vec3((*this)[1] * v[2] - (*this)[2] * v[1],
+                        (*this)[2] * v[0] - (*this)[0] * v[2],
+                        (*this)[0] * v[1] - (*this)[1] * v[0]);
+        }
+
+        Real length() const
+        {
+            return sqrt((*this)[0] * (*this)[0] + (*this)[1] * (*this)[1] + (*this)[2] * (*this)[2]);
+        }
+        Real getX() const { return (*this)[0]; }
+        Real getY() const { return (*this)[1]; }
+        Real getZ() const { return (*this)[2]; }
+
+    };
+
+    template <>
+    class Vec4<Real> : public VectorN<Real, 4>
+    {
+    public:
+        // 构造函数
+        Vec4() : VectorN<Real, 4>({Real::zero(), Real::zero(), Real::zero(), Real::zero()}) {}
+        Vec4(Real x, Real y, Real z, Real w) : VectorN<Real, 4>({x, y, z, w}) {}
+
+        // 叉积
+        Vec4 cross(const Vec4 &v) const
+        {
+            return Vec4((*this)[1] * v[2] - (*this)[2] * v[1],
+                        (*this)[2] * v[0] - (*this)[0] * v[2],
+                        (*this)[0] * v[1] - (*this)[1] * v[0],
+                        Real::zero()); // 4D向量的叉积结果在第四维为零
+        }
+
+        Real length() const
+        {
+            return sqrt((*this)[0] * (*this)[0] + (*this)[1] * (*this)[1] + (*this)[2] * (*this)[2]);
+        }
+        Real getX() const { return (*this)[0]; }
+        Real getY() const { return (*this)[1]; }
+        Real getZ() const { return (*this)[2]; }
+        Real getW() const { return (*this)[3]; }
+    };
+
 }

@@ -20,4 +20,12 @@ namespace OxygenMath
     {
         return std::abs(num.data);
     }
+    Real cos(const Real &angle)
+    {
+        return Real(std::cos(angle.data));
+    }
+    Real sin(const Real &angle)
+    {
+        return Real(std::sin(angle.data));
+    }
 }
