@@ -62,9 +62,9 @@ namespace OxygenMath
             if (size() != other.size())
                 throw std::invalid_argument("Vector size mismatch in addition");
 
-            Vector<T> result(size());
+            Vector<T> result(*this);
             for (size_t i = 0; i < size(); ++i)
-                result[i] = data[i] + other.data[i]; // 使用 operator+
+                result[i] += other.data[i]; // 使用 operator+
             return result;
         }
 
@@ -79,9 +79,9 @@ namespace OxygenMath
             if (size() != other.size())
                 throw std::invalid_argument("Vector size mismatch in subtraction");
 
-            Vector<T> result(size());
+            Vector<T> result(*this);
             for (size_t i = 0; i < size(); ++i)
-                result[i] = data[i] - other.data[i];
+                result[i] -= other.data[i];
             return result;
         }
 
@@ -92,9 +92,9 @@ namespace OxygenMath
          */
         Vector<T> operator*(const T &scalar) const
         {
-            Vector<T> result(size());
+            Vector<T> result(*this);
             for (size_t i = 0; i < size(); ++i)
-                result[i] = data[i] * scalar;
+                result[i] *= scalar;
             return result;
         }
 
@@ -106,9 +106,9 @@ namespace OxygenMath
          */
         friend Vector<T> operator*(const T &scalar, const Vector<T> &vec)
         {
-            Vector<T> result(vec.size());
+            Vector<T> result(vec);
             for (size_t i = 0; i < vec.size(); ++i)
-                result[i] = vec.data[i] * scalar;
+                result[i] *= scalar;
             return result;
         }
 
@@ -117,9 +117,9 @@ namespace OxygenMath
          */
         Vector<T> operator-() const
         {
-            Vector<T> result(size());
+            Vector<T> result(*this);
             for (size_t i = 0; i < size(); ++i)
-                result[i] = -data[i];
+                result[i] *= -1;
             return result;
         }
 
@@ -237,9 +237,9 @@ namespace OxygenMath
             if (size() != other.size())
                 throw std::invalid_argument("Vector size mismatch in addition");
 
-            Vector<Real> result(size());
+            Vector<Real> result(*this);
             for (size_t i = 0; i < size(); ++i)
-                result[i] = data[i] + other.data[i]; // 使用 operator+
+                result[i] += other.data[i]; // 使用 operator+
             return result;
         }
 
@@ -254,9 +254,9 @@ namespace OxygenMath
             if (size() != other.size())
                 throw std::invalid_argument("Vector size mismatch in subtraction");
 
-            Vector<Real> result(size());
+            Vector<Real> result(*this);
             for (size_t i = 0; i < size(); ++i)
-                result[i] = data[i] - other.data[i];
+                result[i] -= other.data[i];
             return result;
         }
 
@@ -267,9 +267,9 @@ namespace OxygenMath
          */
         Vector<Real> operator*(const Real &scalar) const
         {
-            Vector<Real> result(size());
+            Vector<Real> result(*this);
             for (size_t i = 0; i < size(); ++i)
-                result[i] = data[i] * scalar;
+                result[i] *= scalar;
             return result;
         }
 
@@ -281,9 +281,9 @@ namespace OxygenMath
          */
         friend Vector<Real> operator*(const Real &scalar, const Vector<Real> &vec)
         {
-            Vector<Real> result(vec.size());
+            Vector<Real> result(vec);
             for (size_t i = 0; i < vec.size(); ++i)
-                result[i] = vec.data[i] * scalar;
+                result[i] *= scalar;
             return result;
         }
 
@@ -292,9 +292,9 @@ namespace OxygenMath
          */
         Vector<Real> operator-() const
         {
-            Vector<Real> result(size());
+            Vector<Real> result(*this);
             for (size_t i = 0; i < size(); ++i)
-                result[i] = -data[i];
+                result[i] *= -1;
             return result;
         }
 
@@ -303,10 +303,10 @@ namespace OxygenMath
          */
         Vector<Real> l2_normalization() const
         {
-            Vector<Real> result(size());
+            Vector<Real> result(*this);
             Real norm = this->l2_norm();
             for (size_t i = 0; i < size(); ++i)
-                result[i] = data[i] / norm;
+                result[i] /= norm;
             return result;
         }
 
@@ -341,7 +341,7 @@ namespace OxygenMath
         {
             Real sum = Real::zero();
             for (const auto &val : data)
-                sum = sum + val * val;
+                sum += val * val;
             return sqrt(sum);
         }
 
@@ -352,7 +352,7 @@ namespace OxygenMath
         {
             Real sum = Real::zero();
             for (const auto &val : data)
-                sum = sum + val * val;
+                sum += val * val;
             return sum;
         }
 
