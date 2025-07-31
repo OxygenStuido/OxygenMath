@@ -61,6 +61,7 @@ void testVector()
 
     test_pass_count++;
 }
+
 void testVectorN()
 {
     constexpr size_t N = 3;
@@ -160,10 +161,37 @@ void testVec4()
 
     test_pass_count++;
 }
+
+void testMatrix()
+{
+    std::cout << "=========Matrix test=========" << std::endl;
+
+    // 构造2x2矩阵
+    MatrixNM<Real, 2, 2> m1{{{1.0, 2.0}, {3.0, 4.0}}};
+    MatrixNM<Real, 2, 2> m2{{{5.0, 6.0}, {7.0, 8.0}}};
+
+    std::cout << "Matrix m1:\n"<< m1;
+    std::cout << "Matrix m2:\n"<< m2;
+
+    // 加法
+    auto m_add = m1 + m2;
+    std::cout << "m1 + m2:\n"<< m_add;
+
+    // 减法
+    auto m_sub = m1 - m2;
+    std::cout << "m1 - m2:\n"<< m_sub;
+
+    // 乘法
+    auto m_mul = m1 * m2;
+    std::cout << "m1 * m2:\n"<< m_mul;
+    std::cout << "=========Matrix test=========" << std::endl;
+    test_pass_count++;
+}
+
 int main()
 {
-    auto a = {testReal, testComplex};
-    std::vector<std::function<void()>> test_functions{testVector, testVectorN, testVec2, testVec3, testVec4};
+    auto a = {testReal, testComplex,testVector, testVectorN, testVec2, testVec3, testVec4};
+    std::vector<std::function<void()>> test_functions{testMatrix};
     for (const auto &func : test_functions)
     {
         func();
