@@ -170,27 +170,47 @@ void testMatrix()
     MatrixNM<Real, 2, 2> m1{{{1.0, 2.0}, {3.0, 4.0}}};
     MatrixNM<Real, 2, 2> m2{{{5.0, 6.0}, {7.0, 8.0}}};
 
-    std::cout << "Matrix m1:\n"<< m1;
-    std::cout << "Matrix m2:\n"<< m2;
+    std::cout << "Matrix m1:\n"
+              << m1 << "\n";
+    std::cout << "Matrix m2:\n"
+              << m2 << "\n";
 
     // 加法
     auto m_add = m1 + m2;
-    std::cout << "m1 + m2:\n"<< m_add;
+    std::cout << "m1 + m2:\n"
+              << m_add << "\n";
 
     // 减法
     auto m_sub = m1 - m2;
-    std::cout << "m1 - m2:\n"<< m_sub;
+    std::cout << "m1 - m2:\n"
+              << m_sub << "\n";
 
     // 乘法
     auto m_mul = m1 * m2;
-    std::cout << "m1 * m2:\n"<< m_mul;
+    std::cout << "m1 * m2:\n"
+              << m_mul << "\n";
+
+    // 标量乘法
+    auto m_scalar_mul = m1 * Real(2.0);
+    std::cout << "m1 * 2.0:\n"
+              << m_scalar_mul << "\n";
+
+    // 标量乘法（反向）
+    auto m_scalar_mul2 = Real(2.0) * m1;
+    std::cout << "2.0 * m1:\n"
+              << m_scalar_mul2 << "\n";
+
+    m1 = m_mul;
+    std::cout << "After assignment, m1:\n"
+              << m1 << "\n";
+
     std::cout << "=========Matrix test=========" << std::endl;
     test_pass_count++;
 }
 
 int main()
 {
-    auto a = {testReal, testComplex,testVector, testVectorN, testVec2, testVec3, testVec4};
+    auto a = {testReal, testComplex, testVector, testVectorN, testVec2, testVec3, testVec4};
     std::vector<std::function<void()>> test_functions{testMatrix};
     for (const auto &func : test_functions)
     {

@@ -139,15 +139,12 @@ namespace OxygenMath
 
             // 循环展开4次
             for (; i + 3 < size(); i += 4)
-            {
                 result = result + data[i] * other.data[i] + data[i + 1] * other.data[i + 1] + data[i + 2] * other.data[i + 2] + data[i + 3] * other.data[i + 3];
-            }
 
             // 处理剩余元素
             for (; i < size(); ++i)
-            {
                 result = result + data[i] * other.data[i];
-            }
+            
 
             return result;
         }

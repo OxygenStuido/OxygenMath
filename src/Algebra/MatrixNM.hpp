@@ -6,6 +6,8 @@
 #include "VectorN.hpp"
 #include "NumberField.hpp"
 #include "AlgebraTool.hpp"
+#include "MatrixBase.hpp"
+#include "MatrixExpr.hpp"
 #include "../Constants.hpp"
 
 namespace OxygenMath
@@ -14,13 +16,14 @@ namespace OxygenMath
      * \tparam T 矩阵元素类型，必须继承自NumberField
      */
     template <typename T, size_t Rows, size_t Cols>
-    class MatrixNM
+    class MatrixNM : public MatrixBase<MatrixNM<T, Rows, Cols>>
     {
         static_assert(std::is_base_of<NumberField<T>, T>::value,
                       "Matrix<T> requires T to inherit from NumberField<T>");
 
     private:
         std::vector<T> data;
+        using Scalar = T;
 
     public:
         MatrixNM() : data(Rows * Cols, T::zero()) {}
@@ -50,48 +53,21 @@ namespace OxygenMath
             return data[row * Cols + col];
         }
 
-        // 矩阵加法
-        MatrixNM operator+(const MatrixNM &other) const
-        {
-            MatrixNM result;
-            for (size_t i = 0; i < Rows * Cols; ++i)
-            {
-                result.data[i] = this->data[i] + other.data[i];
-            }
-            return result;
-        }
+        size_t rows() const { return Rows; }
+        size_t cols() const { return Cols; }
 
-        // 矩阵减法
-        MatrixNM operator-(const MatrixNM &other) const
+        // 从表达式赋值
+        template <typename Expr>
+        MatrixNM &operator=(const Expr &expr)
         {
-            MatrixNM result;
-            for (size_t i = 0; i < Rows * Cols; ++i)
-            {
-                result.data[i] = this->data[i] - other.data[i];
-            }
-            return result;
-        }
-
-        // 矩阵乘法
-        template <size_t OtherCols>
-        MatrixNM<T, Rows, OtherCols> operator*(const MatrixNM<T, Cols, OtherCols> &other) const
-        {
-            MatrixNM<T, Rows, OtherCols> result;
+            std::vector<T> tmp(Rows * Cols);
             for (size_t i = 0; i < Rows; ++i)
-            {
-                for (size_t k = 0; k < Cols; ++k)
-                {
-                    T val = (*this)(i, k); // 缓存左矩阵元素
-                    for (size_t j = 0; j < OtherCols; ++j)
-                    {
-                        result(i, j) += val * other(k, j); // 连续访问右矩阵
-                    }
-                }
-            }
-            return result;
+                for (size_t j = 0; j < Cols; ++j)
+                    tmp[i * Cols + j] = expr(i, j);
+            data = std::move(tmp);
+            return *this;
         }
 
-        // 输出矩阵到流
         friend std::ostream &operator<<(std::ostream &os, const MatrixNM &matrix)
         {
             for (size_t i = 0; i < Rows; ++i)
@@ -103,7 +79,9 @@ namespace OxygenMath
                     if (j < Cols - 1)
                         os << ", ";
                 }
-                os << " ]\n";
+                os << " ]";
+                if (i < Rows - 1)
+                    os << std::endl;
             }
             return os;
         }
