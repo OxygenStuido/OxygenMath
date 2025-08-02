@@ -16,6 +16,13 @@ namespace OxygenMath
     struct is_scalar_type<Real> : std::true_type
     {
     };
+
+    // 为 Complex 类型特化
+    template <>
+    struct is_scalar_type<Complex> : std::true_type
+    {
+    };
+
     template <typename Derived>
     class MatrixBase
     {
@@ -47,14 +54,6 @@ namespace OxygenMath
             return MatrixScalarMul<Derived, S>(derived(), scalar);
         }
 
-        // 数乘：标量 * 矩阵
-        template <typename S, typename D = Derived>
-        friend auto operator*(const S &scalar, const MatrixBase<D> &mat)
-            -> typename std::enable_if<is_scalar_type<S>::value,
-                                       ScalarMatrixMul<S, D>>::type
-        {
-            return ScalarMatrixMul<S, D>(scalar, mat.derived());
-        }
         // 加法
         template <typename Other>
         auto operator+(const MatrixBase<Other> &other) const
@@ -71,4 +70,13 @@ namespace OxygenMath
             return MatrixSub<Derived, Other>(derived(), other.derived());
         }
     };
+
+    // 全局运算符：标量 * 矩阵（移出类定义）
+    template <typename S, typename Derived>
+    auto operator*(const S &scalar, const MatrixBase<Derived> &mat)
+        -> typename std::enable_if<is_scalar_type<S>::value,
+                                   ScalarMatrixMul<S, Derived>>::type
+    {
+        return ScalarMatrixMul<S, Derived>(scalar, mat.derived());
+    }
 }
