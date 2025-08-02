@@ -89,7 +89,6 @@ namespace OxygenMath
         {
             return sqrt(dot(*this));
         }
-
         // 单位化
         VectorN normalize() const
         {
@@ -97,7 +96,14 @@ namespace OxygenMath
             if (len == T::zero())
                 throw std::domain_error("Cannot normalize zero vector");
 
-            return (*this) * (T::identity() / len);
+            // 显式创建结果向量，避免返回表达式模板
+            VectorN result;
+            T scale = T::identity() / len;
+            for (size_t i = 0; i < N; ++i)
+            {
+                result[i] = data[i] * scale;
+            }
+            return result;
         }
 
         friend std::ostream &operator<<(std::ostream &os, const VectorN &v)

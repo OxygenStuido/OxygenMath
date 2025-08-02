@@ -1,9 +1,36 @@
 #include <iostream>
 #include <functional>
 #include "OxygenMath.hpp"
+
 using namespace OxygenMath;
 static int test_pass_count = 0;
+void testMatrix();
+void testVector();
+void test2dGeometry();
+int main()
+{
+    auto test_funnctions = {testMatrix, test2dGeometry};
+    std::vector<std::function<void()>> test_functions{testVector};
+    for (const auto &func : test_functions)
+    {
+        func();
+    }
+    std::cout << "There are a total of " << static_cast<int>(test_functions.size()) << " tests\nPassed :" << test_pass_count;
+    return 0;
+}
 
+void test2dGeometry()
+{
+    std::cout << "=========2D Geometry test=========" << std::endl;
+
+    Vector2f p1{0, 3};
+    Vector2f p2{4, 0};
+
+    Real dist = Geometry2DAlgorithm::distance(p1, p2);
+    std::cout << "Distance between p1 and p2: " << dist << std::endl;
+
+    std::cout << "=========2D Geometry test=========" << std::endl;
+}
 void testMatrix()
 {
     std::cout << "=========Matrix test=========" << std::endl;
@@ -57,11 +84,22 @@ void testVector()
     std::cout << "Vector v1:\n " << v1 << std::endl;
     OxygenMath::VectorN<OxygenMath::Real, 3> v2{4.0, 5.0, 6.0};
 
+    auto v1_v2_add = v1 + v2; // 向量加法
+    std::cout << "v1 + v2:\n " << v1_v2_add << std::endl;
+
+    auto v1_v2_sub = v1 - v2; // 向量减法
+    std::cout << "v1 - v2:\n " << v1_v2_sub << std::endl;
+    auto v1_v2_dot = v1.dot(v2); // 向量点积
+    std::cout << "v1 dot v2:\n " << v1_v2_dot << std::endl;
+    auto v1_v2_cross = v1.cross(v2); // 向量叉积
+    std::cout << "v1 cross v2:\n " << v1_v2_cross << std::endl;
+    auto v1_norm = v1.norm(); // 向量范数
+    std::cout << "v1 norm:\n " << v1_norm << std::endl;
+    auto v1_normalized = v1.normalize(); // 向量归一化
+    std::cout << "v1 normalized:\n " << v1_normalized << std::endl;
     // 测试矩阵
-    OxygenMath::MatrixNM<OxygenMath::Real, 3, 3> mat{
-        {1.0, 0.0, 0.0},
-        {0.0, 2.0, 0.0},
-        {0.0, 0.0, 3.0}};
+    OxygenMath::MatrixNM<OxygenMath::Real, 3, 3>
+        mat{{1.0, 0.0, 0.0}, {0.0, 2.0, 0.0}, {0.0, 0.0, 3.0}};
     std::cout << "Matrix mat:\n"
               << mat << std::endl;
 
@@ -80,14 +118,4 @@ void testVector()
 
     std::cout << "=========Vector test=========" << std::endl;
     test_pass_count++;
-}
-int main()
-{
-    std::vector<std::function<void()>> test_functions{testMatrix, testVector};
-    for (const auto &func : test_functions)
-    {
-        func();
-    }
-    std::cout << "There are a total of " << static_cast<int>(test_functions.size()) << " tests\nPassed :" << test_pass_count;
-    return 0;
 }

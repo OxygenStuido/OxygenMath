@@ -5,3 +5,5 @@
 #include "./Algebra/Vector.hpp"
 #include "./Algebra/VectorN.hpp"
 
+#include "./Geometry/2dGeomertyAlgorithm.hpp"
+
