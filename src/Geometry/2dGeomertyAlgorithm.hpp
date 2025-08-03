@@ -3,9 +3,10 @@
 
 namespace OxygenMath
 {
-    using Vec2 = Vector2f;
     class Geometry2DAlgorithm
     {
+    using Vec2 = Vector2f;
+
     public:
         static Real distance(const Vec2 &p1, const Vec2 &p2)
         {

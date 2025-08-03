@@ -71,7 +71,7 @@ namespace OxygenMath
         }
     };
 
-    // 全局运算符：标量 * 矩阵（移出类定义）
+    // 全局运算符：标量 * 矩阵
     template <typename S, typename Derived>
     auto operator*(const S &scalar, const MatrixBase<Derived> &mat)
         -> typename std::enable_if<is_scalar_type<S>::value,

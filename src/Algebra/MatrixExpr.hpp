@@ -5,16 +5,18 @@
 namespace OxygenMath
 {
     template <typename Derived>
-    struct MatrixExpr {};
+    struct MatrixExpr
+    {
+    };
 
     // 矩阵加法表达式
     template <typename Lhs, typename Rhs>
     struct MatrixAdd : MatrixExpr<MatrixAdd<Lhs, Rhs>>
     {
-        const Lhs& lhs;
-        const Rhs& rhs;
+        const Lhs &lhs;
+        const Rhs &rhs;
 
-        MatrixAdd(const Lhs& l, const Rhs& r) : lhs(l), rhs(r) {}
+        MatrixAdd(const Lhs &l, const Rhs &r) : lhs(l), rhs(r) {}
 
         size_t rows() const { return lhs.rows(); }
         size_t cols() const { return lhs.cols(); }
@@ -29,10 +31,10 @@ namespace OxygenMath
     template <typename Lhs, typename Rhs>
     struct MatrixSub : MatrixExpr<MatrixSub<Lhs, Rhs>>
     {
-        const Lhs& lhs;
-        const Rhs& rhs;
+        const Lhs &lhs;
+        const Rhs &rhs;
 
-        MatrixSub(const Lhs& l, const Rhs& r) : lhs(l), rhs(r) {}
+        MatrixSub(const Lhs &l, const Rhs &r) : lhs(l), rhs(r) {}
 
         size_t rows() const { return lhs.rows(); }
         size_t cols() const { return lhs.cols(); }
@@ -47,10 +49,10 @@ namespace OxygenMath
     template <typename Lhs, typename Rhs>
     struct MatrixMul : MatrixExpr<MatrixMul<Lhs, Rhs>>
     {
-        const Lhs& lhs;
-        const Rhs& rhs;
+        const Lhs &lhs;
+        const Rhs &rhs;
 
-        MatrixMul(const Lhs& l, const Rhs& r) : lhs(l), rhs(r) {}
+        MatrixMul(const Lhs &l, const Rhs &r) : lhs(l), rhs(r) {}
 
         size_t rows() const { return lhs.rows(); }
         size_t cols() const { return rhs.cols(); }
@@ -70,10 +72,10 @@ namespace OxygenMath
     template <typename Mat, typename Scalar>
     struct MatrixScalarMul : MatrixExpr<MatrixScalarMul<Mat, Scalar>>
     {
-        const Mat& mat;
+        const Mat &mat;
         const Scalar scalar;
 
-        MatrixScalarMul(const Mat& m, const Scalar& s) : mat(m), scalar(s) {}
+        MatrixScalarMul(const Mat &m, const Scalar &s) : mat(m), scalar(s) {}
 
         size_t rows() const { return mat.rows(); }
         size_t cols() const { return mat.cols(); }
@@ -89,9 +91,9 @@ namespace OxygenMath
     struct ScalarMatrixMul : MatrixExpr<ScalarMatrixMul<Scalar, Mat>>
     {
         const Scalar scalar;
-        const Mat& mat;
+        const Mat &mat;
 
-        ScalarMatrixMul(const Scalar& s, const Mat& m) : scalar(s), mat(m) {}
+        ScalarMatrixMul(const Scalar &s, const Mat &m) : scalar(s), mat(m) {}
 
         size_t rows() const { return mat.rows(); }
         size_t cols() const { return mat.cols(); }
@@ -104,22 +106,39 @@ namespace OxygenMath
 
     // 输出运算符
     template <typename Expr>
-    std::ostream& operator<<(std::ostream& os, const MatrixExpr<Expr>& expr)
+    std::ostream &operator<<(std::ostream &os, const MatrixExpr<Expr> &expr)
     {
-        const Expr& e = static_cast<const Expr&>(expr);
-        for (size_t i = 0; i < e.rows(); ++i)
+        const Expr &e = static_cast<const Expr &>(expr);
+        const size_t rows = e.rows();
+        const size_t cols = e.cols();
+
+        if (rows == 0 || cols == 0)
         {
-            os << "[ ";
-            for (size_t j = 0; j < e.cols(); ++j)
+            return os << "[]";
+        }
+
+        os << "[";
+        for (size_t i = 0; i < rows; ++i)
+        {
+            if (i != 0)
+                os << " ";
+
+            os << "[";
+            for (size_t j = 0; j < cols; ++j)
             {
                 os << e(i, j);
-                if (j + 1 < e.cols())
+                if (j + 1 < cols)
+                {
                     os << ", ";
+                }
             }
-            os << " ]";
-            if (i + 1 < e.rows())
-                os << std::endl;
+            os << "]";
+
+            if (i + 1 < rows)
+            {
+                os << ",\n";
+            }
         }
-        return os;
+        return os << "]";
     }
 }

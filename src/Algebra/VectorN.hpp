@@ -12,16 +12,14 @@ namespace OxygenMath
     {
     private:
         std::array<T, N> data;
-
+        bool is_row_vector = false; // 默认是列向量
     public:
-        // 默认构造函数（零向量）
         VectorN() : data{}
         {
             for (size_t i = 0; i < N; ++i)
                 data[i] = T::zero();
         }
 
-        // 初始化列表构造函数
         VectorN(std::initializer_list<T> init)
         {
             if (init.size() != N)
@@ -30,7 +28,6 @@ namespace OxygenMath
             std::copy(init.begin(), init.end(), data.begin());
         }
 
-        // 访问元素 (矩阵接口)
         T &operator()(size_t i, size_t j = 0)
         {
             if (j != 0 || i >= N)
@@ -45,11 +42,10 @@ namespace OxygenMath
             return data[i];
         }
 
-        // 向量风格访问
         T &operator[](size_t i) { return data[i]; }
         const T &operator[](size_t i) const { return data[i]; }
 
-        // 维度信息
+        // 默认是列向量
         size_t rows() const { return N; }
         size_t cols() const { return 1; }
 
@@ -73,7 +69,7 @@ namespace OxygenMath
             return result;
         }
 
-        // 叉积 (仅限3D向量)
+        // 叉积 3D
         template <size_t M = N>
         typename std::enable_if<M == 3, VectorN>::type
         cross(const VectorN &other) const
@@ -106,17 +102,64 @@ namespace OxygenMath
             return result;
         }
 
+        bool isRowVector() const { return is_row_vector; }
+
         friend std::ostream &operator<<(std::ostream &os, const VectorN &v)
         {
-            os << "[";
-            for (size_t i = 0; i < N; ++i)
+            const size_t rows = v.rows();
+            const size_t cols = v.cols();
+            const size_t total_elements = rows * cols;
+
+            if (total_elements == 0)
             {
-                os << v.data[i];
-                if (i < N - 1)
-                    os << ", ";
+                return os << "[]";
             }
-            os << "]^T";
-            return os;
+
+            if (total_elements == 1)
+            {
+                return os << "[[" << v(0, 0) << "]]";
+            }
+
+            if (v.isRowVector())
+            {
+                os << "[";
+                for (size_t i = 0; i < cols; ++i)
+                {
+                    os << v(0, i);
+                    if (i + 1 < cols)
+                    {
+                        os << ", ";
+                    }
+                }
+                return os << "]";
+            }
+
+            os << "[";
+            for (size_t i = 0; i < rows; ++i)
+            {
+                if (cols == 1)
+                {
+                    os << "[" << v(i, 0) << "]";
+                }
+                else
+                {
+                    os << "[";
+                    for (size_t j = 0; j < cols; ++j)
+                    {
+                        os << v(i, j);
+                        if (j + 1 < cols)
+                        {
+                            os << ", ";
+                        }
+                    }
+                    os << "]";
+                }
+                if (i + 1 < rows)
+                {
+                    os << ",\n ";
+                }
+            }
+            return os << "]";
         }
     };
 

@@ -7,10 +7,11 @@ static int test_pass_count = 0;
 void testMatrix();
 void testVector();
 void test2dGeometry();
+void myTest();
 int main()
 {
-    auto test_funnctions = {testMatrix, test2dGeometry};
-    std::vector<std::function<void()>> test_functions{testVector};
+    auto test_funnctions = {testMatrix, test2dGeometry, testVector};
+    std::vector<std::function<void()>> test_functions{myTest};
     for (const auto &func : test_functions)
     {
         func();
@@ -18,7 +19,15 @@ int main()
     std::cout << "There are a total of " << static_cast<int>(test_functions.size()) << " tests\nPassed :" << test_pass_count;
     return 0;
 }
-
+void test()
+{
+    std::cout << "=========Test start=========" << std::endl;
+    test_pass_count = 0;
+    testMatrix();
+    testVector();
+    test2dGeometry();
+    std::cout << "=========Test end=========" << std::endl;
+}
 void test2dGeometry()
 {
     std::cout << "=========2D Geometry test=========" << std::endl;
@@ -118,4 +127,19 @@ void testVector()
 
     std::cout << "=========Vector test=========" << std::endl;
     test_pass_count++;
+}
+
+void myTest()
+{
+    std::cout << "=========My Test=========" << std::endl;
+    Vector2f v1{1.0, 2.0};
+    Vector3f v2{3.0, 4.0, 5.0};
+    // // std::cout << v1 << std::endl;
+    // std::cout << v1 + v1 << std::endl;
+    VectorN<Real, 1> v3{6.0};
+    // std::cout << v2 << std::endl;
+    MatrixNM<Real, 2, 2> m1{{{1.0, 2.0}, {3.0, 4.0}}};
+    std::cout << m1 << std::endl;
+    test_pass_count++;
+    std::cout << "=========My Test end=========" << std::endl;
 }

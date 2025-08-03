@@ -70,20 +70,34 @@ namespace OxygenMath
 
         friend std::ostream &operator<<(std::ostream &os, const MatrixNM &matrix)
         {
+            if (Rows == 0 || Cols == 0)
+            {
+                return os << "[]";
+            }
+
+            os << "[";
             for (size_t i = 0; i < Rows; ++i)
             {
-                os << "[ ";
+                if (i != 0)
+                    os << " "; 
+
+                os << "[";
                 for (size_t j = 0; j < Cols; ++j)
                 {
                     os << matrix(i, j);
                     if (j < Cols - 1)
+                    {
                         os << ", ";
+                    }
                 }
-                os << " ]";
+                os << "]";
+
                 if (i < Rows - 1)
-                    os << std::endl;
+                {
+                    os << ",\n";
+                }
             }
-            return os;
+            return os << "]";
         }
     };
 }
