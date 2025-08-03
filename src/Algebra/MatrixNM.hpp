@@ -2,7 +2,6 @@
 #include <vector>
 #include <stdexcept>
 #include <ostream>
-#include "Vector.hpp"
 #include "VectorN.hpp"
 #include "NumberField.hpp"
 #include "AlgebraTool.hpp"

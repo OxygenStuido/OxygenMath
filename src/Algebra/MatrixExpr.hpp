@@ -1,4 +1,3 @@
-// MatrixExpr.hpp
 #pragma once
 #include <iostream>
 
@@ -16,7 +15,11 @@ namespace OxygenMath
         const Lhs &lhs;
         const Rhs &rhs;
 
-        MatrixAdd(const Lhs &l, const Rhs &r) : lhs(l), rhs(r) {}
+        MatrixAdd(const Lhs &l, const Rhs &r) : lhs(l), rhs(r)
+        {
+            if (!(l.rows() == r.rows() && l.cols() == r.cols()))
+                throw std::invalid_argument("Matrix addition requires matrices of the same dimensions");
+        }
 
         size_t rows() const { return lhs.rows(); }
         size_t cols() const { return lhs.cols(); }
@@ -34,7 +37,11 @@ namespace OxygenMath
         const Lhs &lhs;
         const Rhs &rhs;
 
-        MatrixSub(const Lhs &l, const Rhs &r) : lhs(l), rhs(r) {}
+        MatrixSub(const Lhs &l, const Rhs &r) : lhs(l), rhs(r)
+        {
+            if (!(l.rows() == r.rows() && l.cols() == r.cols()))
+                throw std::invalid_argument("Matrix subtraction requires matrices of the same dimensions");
+        }
 
         size_t rows() const { return lhs.rows(); }
         size_t cols() const { return lhs.cols(); }
@@ -52,7 +59,11 @@ namespace OxygenMath
         const Lhs &lhs;
         const Rhs &rhs;
 
-        MatrixMul(const Lhs &l, const Rhs &r) : lhs(l), rhs(r) {}
+        MatrixMul(const Lhs &l, const Rhs &r) : lhs(l), rhs(r)
+        {
+            if (!(l.cols()==r.rows()))
+                throw std::invalid_argument("In matrix multiplication, the number of columns in the first matrix must be equal to the number of rows in the second matrix.");
+        }
 
         size_t rows() const { return lhs.rows(); }
         size_t cols() const { return rhs.cols(); }
