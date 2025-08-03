@@ -68,6 +68,10 @@ namespace OxygenMath
         {
             return MatrixSub<Derived, Other>(derived(), other.derived());
         }
+        auto transpose() const -> MatrixTranspose<Derived>
+        {
+            return MatrixTranspose<Derived>(derived());
+        }
     };
 
     // 全局运算符：标量 * 矩阵

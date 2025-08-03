@@ -46,8 +46,8 @@ namespace OxygenMath
         const T &operator[](size_t i) const { return data[i]; }
 
         // 默认是列向量
-        size_t rows() const { return N; }
-        size_t cols() const { return 1; }
+        size_t rows() const { return is_row_vector ? 1 : N; }
+        size_t cols() const { return is_row_vector ? N : 1; }
 
         // 从表达式赋值
         template <typename Expr>
@@ -102,6 +102,13 @@ namespace OxygenMath
             return result;
         }
 
+        VectorN transpose() const
+        {
+            VectorN result = *this;
+            result.is_row_vector = !is_row_vector;
+            return result;
+        }
+
         bool isRowVector() const { return is_row_vector; }
 
         friend std::ostream &operator<<(std::ostream &os, const VectorN &v)
@@ -125,7 +132,7 @@ namespace OxygenMath
                 os << "[";
                 for (size_t i = 0; i < cols; ++i)
                 {
-                    os << v(0, i);
+                    os << v(i, 0);
                     if (i + 1 < cols)
                     {
                         os << ", ";

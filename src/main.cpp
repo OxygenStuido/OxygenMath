@@ -19,15 +19,6 @@ int main()
     std::cout << "There are a total of " << static_cast<int>(test_functions.size()) << " tests\nPassed :" << test_pass_count;
     return 0;
 }
-void test()
-{
-    std::cout << "=========Test start=========" << std::endl;
-    test_pass_count = 0;
-    testMatrix();
-    testVector();
-    test2dGeometry();
-    std::cout << "=========Test end=========" << std::endl;
-}
 void test2dGeometry()
 {
     std::cout << "=========2D Geometry test=========" << std::endl;
@@ -128,20 +119,30 @@ void testVector()
     std::cout << "=========Vector test=========" << std::endl;
     test_pass_count++;
 }
-
 void myTest()
 {
     std::cout << "=========My Test=========" << std::endl;
     Vector2f v1{1.0, 2.0};
     Vector3f v2{3.0, 4.0, 5.0};
-    // // std::cout << v1 << std::endl;
+    std::cout << v1 << std::endl;
+
+    v1 = v1.transpose();
+    std::cout << v1.cols() << std::endl;
+    std::cout << v1 << std::endl;
+
     // std::cout << v1 - v2 << std::endl;
     VectorN<Real, 1> v3{6.0};
-    // std::cout << v2 << std::endl;
+    VectorN<Real, 1> v4{2.0};
+    // std::cout << v3 * v4 << std::endl;
+    // // std::cout << v2 << std::endl;
     MatrixNM<Real, 2, 2> m1{{{1.0, 2.0}, {3.0, 4.0}}};
-    MatrixNM<Real, 3, 2> m3{{{5.0, 6.0}, {7.0, 8.0}, {7.0, 8.0}}};
-    MatrixNM<Real, 2, 3> m2{{{1.0, 2.0, 3.0}, {3.0, 4.0, 5.0}}};
-    std::cout << m1 * v2 << std::endl;
+    std::cout << m1.transpose() << std::endl;
+    std::cout << m1 * v1 << std::endl;
+    // std::cout << m1 * 2 << std::endl;
+    // std::cout << 2 * m1 << std::endl;
+    // MatrixNM<Real, 3, 2> m3{{{5.0, 6.0}, {7.0, 8.0}, {7.0, 8.0}}};
+    // MatrixNM<Real, 2, 3> m2{{{1.0, 2.0, 3.0}, {3.0, 4.0, 5.0}}};
+    // std::cout << m1 * v2 << std::endl;
     test_pass_count++;
     std::cout << "=========My Test end=========" << std::endl;
 }

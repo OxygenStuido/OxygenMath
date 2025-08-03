@@ -61,7 +61,7 @@ namespace OxygenMath
 
         MatrixMul(const Lhs &l, const Rhs &r) : lhs(l), rhs(r)
         {
-            if (!(l.cols()==r.rows()))
+            if (!(l.cols() == r.rows()))
                 throw std::invalid_argument("In matrix multiplication, the number of columns in the first matrix must be equal to the number of rows in the second matrix.");
         }
 
@@ -115,6 +115,23 @@ namespace OxygenMath
         }
     };
 
+    template <typename Mat>
+    struct MatrixTranspose : MatrixExpr<MatrixTranspose<Mat>>
+    {
+        // static_assert(!std::is_base_of<VectorN<typename Mat::Scalar, Mat::rows()>, Mat>::value,
+        //           "MatrixTranspose 不适用于 VectorN,请使用 VectorN::transpose()");
+        const Mat &mat;
+
+        MatrixTranspose(const Mat &m) : mat(m) {}
+
+        size_t rows() const { return mat.cols(); }
+        size_t cols() const { return mat.rows(); }
+
+        auto operator()(size_t i, size_t j) const -> decltype(mat(j, i))
+        {
+            return mat(j, i);
+        }
+    };
     // 输出运算符
     template <typename Expr>
     std::ostream &operator<<(std::ostream &os, const MatrixExpr<Expr> &expr)
