@@ -67,6 +67,17 @@ namespace OxygenMath
             return *this;
         }
 
+        static MatrixNM<T, Rows, Cols> identity()
+        {
+            static_assert(Rows == Cols, "Identity matrix must be square");
+            MatrixNM<T, Rows, Cols> result;
+            for (size_t i = 0; i < Rows; ++i)
+            {
+                result(i, i) = T::identity();
+            }
+            return result;
+        }
+
         friend std::ostream &operator<<(std::ostream &os, const MatrixNM &matrix)
         {
             if (Rows == 0 || Cols == 0)
@@ -140,6 +151,16 @@ namespace OxygenMath
         size_t rows() const { return 2; }
         size_t cols() const { return 2; }
 
+        static MatrixNM<T, 2, 2> identity()
+        {
+            MatrixNM<T, 2, 2> result;
+            for (size_t i = 0; i < 2; ++i)
+            {
+                result(i, i) = T::identity();
+            }
+            return result;
+        }
+
         T determinant() const
         {
             return data[0] * data[3] - data[1] * data[2];
@@ -175,8 +196,6 @@ namespace OxygenMath
         }
     };
 
-
-
     template <typename T>
     class MatrixNM<T, 3, 3> : public MatrixBase<MatrixNM<T, 3, 3>>
     {
@@ -187,12 +206,10 @@ namespace OxygenMath
         T data[9];
 
     public:
-      
         MatrixNM() : data{T::zero(), T::zero(), T::zero(),
                           T::zero(), T::zero(), T::zero(),
                           T::zero(), T::zero(), T::zero()} {}
 
-      
         MatrixNM(const std::initializer_list<std::initializer_list<T>> &init)
         {
             if (init.size() != 3 || (init.size() > 0 && init.begin()->size() != 3))
@@ -210,7 +227,6 @@ namespace OxygenMath
             }
         }
 
-      
         MatrixNM(T m11, T m12, T m13,
                  T m21, T m22, T m23,
                  T m31, T m32, T m33)
@@ -230,8 +246,17 @@ namespace OxygenMath
 
         size_t rows() const { return 3; }
         size_t cols() const { return 3; }
-
         
+        static MatrixNM<T, 3, 3> identity()
+        {
+            MatrixNM<T, 3, 3> result;
+            for (size_t i = 0; i < 3; ++i)
+            {
+                result(i, i) = T::identity();
+            }
+            return result;
+        }
+
         T determinant() const
         {
             return data[0] * (data[4] * data[8] - data[5] * data[7]) -
@@ -257,12 +282,11 @@ namespace OxygenMath
                 (data[0] * data[8] - data[2] * data[6]) * inv_det,
                 (data[2] * data[3] - data[0] * data[5]) * inv_det,
 
-                (data[3] * data[7] - data[4] * data[6]) * inv_det, 
+                (data[3] * data[7] - data[4] * data[6]) * inv_det,
                 (data[1] * data[6] - data[0] * data[7]) * inv_det,
                 (data[0] * data[4] - data[1] * data[3]) * inv_det);
         }
 
-       
         template <typename Expr>
         MatrixNM &operator=(const Expr &expr)
         {
@@ -276,7 +300,6 @@ namespace OxygenMath
             return *this;
         }
 
-        
         friend std::ostream &operator<<(std::ostream &os, const MatrixNM &matrix)
         {
             return os << "[[" << matrix(0, 0) << ", " << matrix(0, 1) << ", " << matrix(0, 2) << "],\n"

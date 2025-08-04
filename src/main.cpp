@@ -123,13 +123,7 @@ void myTest()
 {
     std::cout << "=========My Test=========" << std::endl;
 
-    MatrixNM<Real, 2, 2> m1{{{1.0, 2.0}, {3.0, 4.0}}};
-    std::cout << m1.inverse() << std::endl;
-    // std::cout << m1.transpose() << std::endl;
-    std::cout<<m1.determinant() << std::endl;
-    test_pass_count++;
-    MatrixNM<Real, 3, 3> m2{{{1.0, 2.0, 3.0}, {4.0, 5.0, 6.0}, {7.0, 8.0,9.0}}};
-    std::cout << m2.inverse() << std::endl;
-    std::cout << m2.determinant() << std::endl;
+    std::cout << MatrixNM<Real, 3, 3>::identity() << std::endl;
+
     std::cout << "=========My Test end=========" << std::endl;
 }
