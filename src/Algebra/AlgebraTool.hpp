@@ -18,7 +18,7 @@ namespace OxygenMath
      * @param num 底数
      * @return 实数的绝对值
      */
-    Real abs(const Real &num)
+    inline Real abs(const Real &num)
     {
         return Real(std::abs(num.data));
     }
@@ -31,7 +31,7 @@ namespace OxygenMath
      * @param angle 弧度制角度
      * @return 实数的余弦值
      */
-    Real cos(const Real &angle)
+    inline Real cos(const Real &angle)
     {
         return Real(std::cos(angle.data));
     }
@@ -40,7 +40,7 @@ namespace OxygenMath
      * @param angle 弧度制角度
      * @return 实数的正弦值
      */
-    Real sin(const Real &angle)
+    inline Real sin(const Real &angle)
     {
         return Real(std::sin(angle.data));
     }
@@ -82,7 +82,7 @@ namespace OxygenMath
      * @param value 输入值
      * @return 实数的反正切值
      */
-    Real atan(const Real &value)
+    inline Real atan(const Real &value)
     {
         return Real(std::atan(value.data));
     }
@@ -91,7 +91,7 @@ namespace OxygenMath
      * @param value 输入值
      * @return 实数的双曲正弦值
      */
-    Real sinh(const Real &value)
+    inline Real sinh(const Real &value)
     {
         return Real(std::sinh(value.data));
     }
@@ -100,7 +100,7 @@ namespace OxygenMath
      * @param value 输入值
      * @return 实数的双曲余弦值
      */
-    Real cosh(const Real &value)
+    inline Real cosh(const Real &value)
     {
         return Real(std::cosh(value.data));
     }
@@ -109,7 +109,7 @@ namespace OxygenMath
      * @param value 输入值
      * @return 实数的双曲正切值
      */
-    Real tanh(const Real &value)
+    inline Real tanh(const Real &value)
     {
         return Real(std::tanh(value.data));
     }
@@ -122,7 +122,7 @@ namespace OxygenMath
      * @param exponent 指数
      * @return 实数的指数值
      */
-    Real exp(const Real &exponent)
+    inline Real exp(const Real &exponent)
     {
         return Real(std::exp(exponent.data));
     }

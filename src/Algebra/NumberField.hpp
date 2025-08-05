@@ -16,7 +16,6 @@ namespace OxygenMath
     class NumberField
     {
     public:
-        virtual ~NumberField() = default;
 
         // // 数域需保持加法 减法 乘法 除法
         // T add(const T &other) const { return static_cast<const T *>(this)->add(other); }

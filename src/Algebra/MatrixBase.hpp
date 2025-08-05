@@ -5,12 +5,12 @@
 
 namespace OxygenMath
 {
+    // 因为不支持自定义类型，所以我们需要一个类型特征来判断是否是标量类型
     template <typename T>
     struct is_scalar_type : std::is_arithmetic<T>
     {
     };
-
-    // 为 Real 类型特化
+    //  所以为 Real 类型特化
     template <>
     struct is_scalar_type<Real> : std::true_type
     {
@@ -68,6 +68,8 @@ namespace OxygenMath
         {
             return MatrixSub<Derived, Other>(derived(), other.derived());
         }
+
+        // 转置
         auto transpose() const -> MatrixTranspose<Derived>
         {
             return MatrixTranspose<Derived>(derived());

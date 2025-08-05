@@ -125,7 +125,11 @@ void myTest()
 
     Real a(1.0), b(2.0), c(3.0);
     Real result = a + b * c - a / b;
-    std::cout<< "Result of a + b * c - a / b: " << result << std::endl;
+    std::cout << "Result of a + b * c - a / b: " << result << std::endl;
+    Vector2f v1{1.0, 2.0};
+    Vector2f v2{3.0, 4.0};
+    auto v3 = v1 + v2 - v1;
+    std::cout << "Vector v3: \n" << v3 << std::endl;
     auto m1 = MatrixNM<Real, 3, 3>::identity();
     auto m2 = MatrixNM<Real, 3, 3>{{{1.0, 2.0, 3.0}, {4.0, 5.0, 6.0}, {7.0, 8.0, 9.0}}};
     auto m3 = (m1 + m2 - m1) * 2;

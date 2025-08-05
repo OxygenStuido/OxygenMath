@@ -2,6 +2,7 @@
 
 namespace OxygenMath
 {
+    //前置声明避免循环依赖
     template <typename Derived>
     class MatrixBase;
 
