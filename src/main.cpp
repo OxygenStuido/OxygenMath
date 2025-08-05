@@ -123,7 +123,10 @@ void myTest()
 {
     std::cout << "=========My Test=========" << std::endl;
 
-    std::cout << MatrixNM<Real, 3, 3>::identity() << std::endl;
-
+    auto m1 = MatrixNM<Real, 3, 3>::identity();
+    auto m2 = MatrixNM<Real, 3, 3>{{{1.0, 2.0, 3.0}, {4.0, 5.0, 6.0}, {7.0, 8.0, 9.0}}};
+    auto m3 = (m1 + m2 - m1) * 2;
+    std::cout << "m3:\n"
+              << m3 << std::endl;
     std::cout << "=========My Test end=========" << std::endl;
 }

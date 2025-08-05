@@ -39,7 +39,7 @@ namespace OxygenMath
         // 矩阵乘法（A * B）
         template <typename Other>
         auto operator*(const MatrixBase<Other> &other) const
-            -> decltype(MatrixMul<Derived, Other>(derived(), other.derived()))
+            -> MatrixMul<Derived, Other>
         {
             return MatrixMul<Derived, Other>(derived(), other.derived());
         }
@@ -56,7 +56,7 @@ namespace OxygenMath
         // 加法
         template <typename Other>
         auto operator+(const MatrixBase<Other> &other) const
-            -> decltype(MatrixAdd<Derived, Other>(derived(), other.derived()))
+            -> MatrixAdd<Derived, Other>
         {
             return MatrixAdd<Derived, Other>(derived(), other.derived());
         }
@@ -64,7 +64,7 @@ namespace OxygenMath
         // 减法
         template <typename Other>
         auto operator-(const MatrixBase<Other> &other) const
-            -> decltype(MatrixSub<Derived, Other>(derived(), other.derived()))
+            -> MatrixSub<Derived, Other>
         {
             return MatrixSub<Derived, Other>(derived(), other.derived());
         }

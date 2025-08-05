@@ -246,7 +246,7 @@ namespace OxygenMath
 
         size_t rows() const { return 3; }
         size_t cols() const { return 3; }
-        
+
         static MatrixNM<T, 3, 3> identity()
         {
             MatrixNM<T, 3, 3> result;

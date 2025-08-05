@@ -1,11 +1,18 @@
 #pragma once
-#include <iostream>
 
 namespace OxygenMath
 {
     template <typename Derived>
-    struct MatrixExpr
+    class MatrixBase;
+
+    template <typename Derived>
+    struct MatrixExpr : MatrixBase<Derived>
     {
+        const Derived &derived() const { return *static_cast<const Derived *>(this); }
+        Derived &derived() { return *static_cast<Derived *>(this); }
+
+        using MatrixBase<Derived>::rows;
+        using MatrixBase<Derived>::cols;
     };
 
     // 矩阵加法表达式
@@ -115,11 +122,10 @@ namespace OxygenMath
         }
     };
 
+    // 矩阵转置表达式
     template <typename Mat>
     struct MatrixTranspose : MatrixExpr<MatrixTranspose<Mat>>
     {
-        // static_assert(!std::is_base_of<VectorN<typename Mat::Scalar, Mat::rows()>, Mat>::value,
-        //           "MatrixTranspose 不适用于 VectorN,请使用 VectorN::transpose()");
         const Mat &mat;
 
         MatrixTranspose(const Mat &m) : mat(m) {}
