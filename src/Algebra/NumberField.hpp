@@ -1,20 +1,28 @@
+/**
+ * @file NumberField.hpp
+ * @brief 这是一个数域的抽象基类，定义了数域的基本操作和接口。
+ * @details 数域需要支持加法、减法、乘法和除法操作以及零元(zero)和单位元(identity)的定义。
+ * @tparam T 数域的具体类型，必须继承自 NumberField<T>。
+ * @note 该类使用 CRTP 设计模式，以便在派生类中实现具体的数域操作。
+ */
 #pragma once
 #include <iostream>
 #include <cmath>
-// CRTP设计模式
+
 namespace OxygenMath
 {
+    // CRTP设计模式
     template <typename T>
     class NumberField
     {
     public:
         virtual ~NumberField() = default;
 
-        // 数域需保持加法 减法 乘法 除法
-        T add(const T &other) const { return static_cast<const T *>(this)->add(other); }
-        T sub(const T &other) const { return static_cast<const T *>(this)->sub(other); }
-        T mul(const T &other) const { return static_cast<const T *>(this)->mul(other); }
-        T div(const T &other) const { return static_cast<const T *>(this)->div(other); }
+        // // 数域需保持加法 减法 乘法 除法
+        // T add(const T &other) const { return static_cast<const T *>(this)->add(other); }
+        // T sub(const T &other) const { return static_cast<const T *>(this)->sub(other); }
+        // T mul(const T &other) const { return static_cast<const T *>(this)->mul(other); }
+        // T div(const T &other) const { return static_cast<const T *>(this)->div(other); }
 
         // 数域一定包含零元
         static T zero() { return T::zero(); }
