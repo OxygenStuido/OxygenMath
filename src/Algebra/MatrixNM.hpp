@@ -11,7 +11,7 @@
 
 namespace OxygenMath
 {
-    /*! \brief 矩阵模板类，支持基本线性代数运算
+    /*! \brief 矩阵模板类，支持基本线性代数运算,只实现矩阵的构造和基本运算，求解行列式，逆，是否奇异位于LinerAlgbraAlgorithm.hpp
      * \tparam T 矩阵元素类型，必须继承自NumberField
      */
     template <typename T, size_t Rows, size_t Cols>
@@ -161,23 +161,18 @@ namespace OxygenMath
             return result;
         }
 
-        T determinant() const
-        {
-            return data[0] * data[3] - data[1] * data[2];
-        }
-
-        MatrixNM inverse() const
-        {
-            T det = determinant();
-            if (det == T::zero())
-            {
-                throw std::runtime_error("Matrix is singular and cannot be inverted");
-            }
-            T inv_det = T::identity() / det;
-            return MatrixNM(
-                data[3] * inv_det, -data[1] * inv_det,
-                -data[2] * inv_det, data[0] * inv_det);
-        }
+        // MatrixNM inverse() const
+        // {
+        //     T det = determinant();
+        //     if (det == T::zero())
+        //     {
+        //         throw std::runtime_error("Matrix is singular and cannot be inverted");
+        //     }
+        //     T inv_det = T::identity() / det;
+        //     return MatrixNM(
+        //         data[3] * inv_det, -data[1] * inv_det,
+        //         -data[2] * inv_det, data[0] * inv_det);
+        // }
 
         template <typename Expr>
         MatrixNM &operator=(const Expr &expr)
@@ -257,35 +252,28 @@ namespace OxygenMath
             return result;
         }
 
-        T determinant() const
-        {
-            return data[0] * (data[4] * data[8] - data[5] * data[7]) -
-                   data[1] * (data[3] * data[8] - data[5] * data[6]) +
-                   data[2] * (data[3] * data[7] - data[4] * data[6]);
-        }
+        // MatrixNM inverse() const
+        // {
+        //     T det = determinant();
+        //     if (det == T::zero())
+        //     {
+        //         throw std::runtime_error("Matrix is singular and cannot be inverted");
+        //     }
+        //     T inv_det = T::identity() / det;
 
-        MatrixNM inverse() const
-        {
-            T det = determinant();
-            if (det == T::zero())
-            {
-                throw std::runtime_error("Matrix is singular and cannot be inverted");
-            }
-            T inv_det = T::identity() / det;
+        //     return MatrixNM(
+        //         (data[4] * data[8] - data[5] * data[7]) * inv_det,
+        //         (data[2] * data[7] - data[1] * data[8]) * inv_det,
+        //         (data[1] * data[5] - data[2] * data[4]) * inv_det,
 
-            return MatrixNM(
-                (data[4] * data[8] - data[5] * data[7]) * inv_det,
-                (data[2] * data[7] - data[1] * data[8]) * inv_det,
-                (data[1] * data[5] - data[2] * data[4]) * inv_det,
+        //         (data[5] * data[6] - data[3] * data[8]) * inv_det,
+        //         (data[0] * data[8] - data[2] * data[6]) * inv_det,
+        //         (data[2] * data[3] - data[0] * data[5]) * inv_det,
 
-                (data[5] * data[6] - data[3] * data[8]) * inv_det,
-                (data[0] * data[8] - data[2] * data[6]) * inv_det,
-                (data[2] * data[3] - data[0] * data[5]) * inv_det,
-
-                (data[3] * data[7] - data[4] * data[6]) * inv_det,
-                (data[1] * data[6] - data[0] * data[7]) * inv_det,
-                (data[0] * data[4] - data[1] * data[3]) * inv_det);
-        }
+        //         (data[3] * data[7] - data[4] * data[6]) * inv_det,
+        //         (data[1] * data[6] - data[0] * data[7]) * inv_det,
+        //         (data[0] * data[4] - data[1] * data[3]) * inv_det);
+        // }
 
         template <typename Expr>
         MatrixNM &operator=(const Expr &expr)

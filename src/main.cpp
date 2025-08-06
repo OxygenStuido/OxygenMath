@@ -122,18 +122,16 @@ void testVector()
 void myTest()
 {
     std::cout << "=========My Test=========" << std::endl;
-
-    Real a(1.0), b(2.0), c(3.0);
-    Real result = a + b * c - a / b;
-    std::cout << "Result of a + b * c - a / b: " << result << std::endl;
-    Vector2f v1{1.0, 2.0};
-    Vector2f v2{3.0, 4.0};
-    auto v3 = v1 + v2 - v1;
-    std::cout << "Vector v3: \n" << v3 << std::endl;
-    auto m1 = MatrixNM<Real, 3, 3>::identity();
-    auto m2 = MatrixNM<Real, 3, 3>{{{1.0, 2.0, 3.0}, {4.0, 5.0, 6.0}, {7.0, 8.0, 9.0}}};
-    auto m3 = (m1 + m2 - m1) * 2;
-    std::cout << "m3:\n"
-              << m3 << std::endl;
+    MatrixNM<Real, 3, 3> m1{{{1.0, 2.0, 3.0}, {4.0, 5.0, 6.0}, {7.0, 8.0, 9.0}}};
+    std::cout << linalg::determinant(m1) << std::endl;
+    MatrixNM<Real, 2, 2> m2{{{1.0, 2.0}, {3.0, 4.0}}};
+    std::cout << linalg::determinant(m2) << std::endl;
+    MatrixNM<Real, 5, 5> m3{{{1, 0, 0, 0, 1},
+                             {2, 1, 0, 0, 0},
+                             {3, 0, 3, 0, 0},
+                             {4, 0, 0, 1, 0},
+                             {5, 2, 3, 4, 1}}};
+    std::cout << m3 << std::endl;
+    std::cout << linalg::determinant(m3) << std::endl;
     std::cout << "=========My Test end=========" << std::endl;
 }

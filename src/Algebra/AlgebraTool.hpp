@@ -23,6 +23,17 @@ namespace OxygenMath
         return Real(std::abs(num.data));
     }
 
+    /**
+     * @brief 交换两个实数的值
+     * @param a 第一个实数
+     * @param b 第二个实数
+     */
+
+    void swap(Real &a, Real &b)
+    {
+        std::swap(a.data, b.data);
+    }
+
     /////////////////////////////////////////////////////////////
     // 三角函数                                             start
     /////////////////////////////////////////////////////////////
