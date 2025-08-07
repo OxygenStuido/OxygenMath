@@ -5,7 +5,6 @@ namespace OxygenMath
 {
     namespace linalg
     {
-
         template <typename T, size_t N>
         struct LUPResult
         {
@@ -46,9 +45,8 @@ namespace OxygenMath
                         maxRow = i;
                     }
                 }
-
                 // 如果最大值为0，矩阵是奇异的
-                if (A_copy(maxRow, k) == 0)
+                if (A_copy(maxRow, k) <= Constants::epsilon)
                 {
                     result.isSingular = true;
                     return result;
@@ -60,7 +58,7 @@ namespace OxygenMath
                     for (size_t j = 0; j < N; ++j)
                     {
                         swap(A_copy(k, j), A_copy(maxRow, j));
-                        std::swap(result.P(k, j), result.P(maxRow, j));
+                        swap(result.P(k, j), result.P(maxRow, j));
                     }
                     result.swapCount++;
                 }
@@ -116,6 +114,43 @@ namespace OxygenMath
             return A_input(0, 0) * (A_input(1, 1) * A_input(2, 2) - A_input(1, 2) * A_input(2, 1)) -
                    A_input(0, 1) * (A_input(1, 0) * A_input(2, 2) - A_input(1, 2) * A_input(2, 0)) +
                    A_input(0, 2) * (A_input(1, 0) * A_input(2, 1) - A_input(1, 1) * A_input(2, 0));
+        }
+
+        template <typename T>
+        MatrixNM<T, 2, 2> inverse(const MatrixNM<T, 2, 2> &A)
+        {
+            T det = determinant(A);
+            if (det == 0)
+            {
+                throw std::runtime_error("2x2 Matrix is singular.");
+            }
+            MatrixNM<T, 2, 2> inv;
+            inv(0, 0) = A(1, 1) / det;
+            inv(0, 1) = -A(0, 1) / det;
+            inv(1, 0) = -A(1, 0) / det;
+            inv(1, 1) = A(0, 0) / det;
+            return inv;
+        }
+
+        template <typename T>
+        MatrixNM<T, 3, 3> inverse(const MatrixNM<T, 3, 3> &A)
+        {
+            T det = determinant(A);
+            if (det == 0)
+            {
+                throw std::runtime_error("3x3 Matrix is singular.");
+            }
+            MatrixNM<T, 3, 3> inv;
+            inv(0, 0) = (A(1, 1) * A(2, 2) - A(1, 2) * A(2, 1)) / det;
+            inv(0, 1) = (A(0, 2) * A(2, 1) - A(0, 1) * A(2, 2)) / det;
+            inv(0, 2) = (A(0, 1) * A(1, 2) - A(0, 2) * A(1, 1)) / det;
+            inv(1, 0) = (A(1, 2) * A(2, 0) - A(1, 0) * A(2, 2)) / det;
+            inv(1, 1) = (A(0, 0) * A(2, 2) - A(0, 2) * A(2, 0)) / det;
+            inv(1, 2) = (A(0, 2) * A(1, 0) - A(0, 0) * A(1, 2)) / det;
+            inv(2, 0) = (A(1, 0) * A(2, 1) - A(1, 1) * A(2, 0)) / det;
+            inv(2, 1) = (A(0, 1) * A(2, 0) - A(0, 0) * A(2, 1)) / det;
+            inv(2, 2) = (A(0, 0) * A(1, 1) - A(0, 1) * A(1, 0)) / det;
+            return inv;
         }
     }
 
