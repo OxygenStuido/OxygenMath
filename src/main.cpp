@@ -126,10 +126,10 @@ void myTest()
     std::cout << linalg::determinant(m1) << std::endl;
     MatrixNM<Real, 2, 2> m2{{{1.0, 2.0}, {3.0, 4.0}}};
     std::cout << linalg::determinant(m2) << std::endl;
-    MatrixNM<Real, 5, 5> m3{{{1, 0, 0, 0, 1},
-                             {2, 1, 0, 0, 0},
-                             {3, 0, 3, 0, 0},
-                             {4, 0, 0, 1, 0},
+    MatrixNM<Real, 5, 5> m3{{{1, 4, 3, 2, 1},
+                             {2, 1, 10, 1, 4},
+                             {3, 0, 3, 0, 3},
+                             {4, 1, 5, 1, 2},
                              {5, 2, 3, 4, 1}}};
     std::cout << m3 << std::endl;
     std::cout << linalg::determinant(m3) << std::endl;

@@ -17,118 +17,70 @@ namespace OxygenMath
 
             LUPResult() : swapCount(0), isSingular(false)
             {
+                // 初始化L为单位矩阵，U和P为零矩阵
                 for (size_t i = 0; i < N; ++i)
                 {
                     for (size_t j = 0; j < N; ++j)
                     {
-                        L(i, j) = (i == j) ? T::identity() : T::zero();
+                        L(i, j) = (i == j) ? 1 : 0;
+                        U(i, j) = 0;
+                        P(i, j) = (i == j) ? 1 : 0;
                     }
-                }
-
-                for (size_t i = 0; i < N; ++i)
-                {
-                    for (size_t j = 0; j < N; ++j)
-                    {
-                        U(i, j) = T::zero();
-                        P(i, j) = T::zero();
-                    }
-                }
-                for (size_t i = 0; i < N; ++i)
-                {
-                    P(i, i) = T::identity();
                 }
             }
         };
 
         template <typename T, size_t N>
-        LUPResult<T, N> LUPDecomposition(MatrixNM<T, N, N> &A)
+        LUPResult<T, N> luDecomposition(const MatrixNM<T, N, N> &A)
         {
             LUPResult<T, N> result;
-            result.swapCount = 0;
-            result.isSingular = false;
-
-            std::vector<size_t> pivot(N);
-            for (size_t i = 0; i < N; ++i)
-            {
-                pivot[i] = i;
-            }
-
+            MatrixNM<T, N, N> A_copy = A;
             for (size_t k = 0; k < N; ++k)
             {
+                // 寻找当前列中最大值的行索引
                 size_t maxRow = k;
-                T maxVal = A(k, k);
-                T currentMax = (maxVal < T::zero()) ? -maxVal : maxVal;
-
                 for (size_t i = k + 1; i < N; ++i)
                 {
-                    T val = A(i, k);
-                    T absVal = (val < T::zero()) ? -val : val;
-                    if (absVal > currentMax)
+                    if (abs(A_copy(i, k)) > abs(A_copy(maxRow, k)))
                     {
-                        currentMax = absVal;
                         maxRow = i;
                     }
                 }
 
+                // 如果最大值为0，矩阵是奇异的
+                if (A_copy(maxRow, k) == 0)
+                {
+                    result.isSingular = true;
+                    return result;
+                }
+
+                // 交换行
                 if (maxRow != k)
                 {
                     for (size_t j = 0; j < N; ++j)
                     {
-                        swap(A(k, j), A(maxRow, j));
+                        swap(A_copy(k, j), A_copy(maxRow, j));
+                        std::swap(result.P(k, j), result.P(maxRow, j));
                     }
-                    std::swap(pivot[k], pivot[maxRow]);
                     result.swapCount++;
                 }
 
-                if (abs((A(k, k))) < Constants::epsilon)
-                {
-                    result.isSingular = true;
-                }
-
+                // 计算U的第k行
                 for (size_t j = k; j < N; ++j)
                 {
-                    T sum = T::zero();
-                    for (size_t m = 0; m < k; ++m)
-                    {
-                        sum = sum + A(k, m) * A(m, j);
-                    }
-                    result.U(k, j) = A(k, j) - sum;
+                    result.U(k, j) = A_copy(k, j);
                 }
 
+                // 计算L的第k列
                 for (size_t i = k + 1; i < N; ++i)
                 {
-                    T sum = T::zero();
-                    for (size_t m = 0; m < k; ++m)
+                    result.L(i, k) = A_copy(i, k) / A_copy(k, k);
+                    for (size_t j = k; j < N; ++j)
                     {
-                        sum = sum + A(i, m) * A(m, k);
-                    }
-
-                    T ukk = result.U(k, k);
-                    if (abs(ukk) < Constants::epsilon)
-                    {
-                        A(i, k) = T::zero();
-                    }
-                    else
-                    {
-                        A(i, k) = (A(i, k) - sum) / ukk;
-                    }
-                    result.L(i, k) = A(i, k);
-                }
-            }
-
-            MatrixNM<T, N, N> P_temp = MatrixNM<T, N, N>::identity();
-            for (size_t step = 0; step < N; ++step)
-            {
-                if (pivot[step] != step)
-                {
-                    for (size_t j = 0; j < N; ++j)
-                    {
-                        std::swap(P_temp(step, j), P_temp(pivot[step], j));
+                        A_copy(i, j) -= result.L(i, k) * result.U(k, j);
                     }
                 }
             }
-            result.P = P_temp;
-
             return result;
         }
 
@@ -136,22 +88,22 @@ namespace OxygenMath
         T determinant(const MatrixNM<T, N, N> &A_input)
         {
             MatrixNM<T, N, N> A = A_input;
-            auto lup = LUPDecomposition(A);
+            auto lup = luDecomposition(A);
 
             if (lup.isSingular)
             {
-                return T::zero();
+                return 0;
             }
-            T detU = T::identity();
+
+            T detU = 1;
             for (size_t i = 0; i < N; ++i)
             {
-                detU = detU * lup.U(i, i);
+                detU *= lup.U(i, i);
             }
 
-            T sign = (lup.swapCount % 2 == 0) ? T::identity() : (T::zero() - T::identity());
+            T sign = (lup.swapCount % 2 == 0) ? 1 : -1;
             return sign * detU;
         }
-
         template <typename T>
         T determinant(const MatrixNM<T, 2, 2> &A)
         {
