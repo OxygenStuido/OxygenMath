@@ -34,49 +34,46 @@ namespace OxygenMath
         {
             LUPResult<T, N> result;
             MatrixNM<T, N, N> A_copy = A;
+
             for (size_t k = 0; k < N; ++k)
             {
-                // 寻找当前列中最大值的行索引
+                // 1. 寻找主元
                 size_t maxRow = k;
                 for (size_t i = k + 1; i < N; ++i)
                 {
                     if (abs(A_copy(i, k)) > abs(A_copy(maxRow, k)))
-                    {
                         maxRow = i;
-                    }
                 }
-                // 如果最大值为0，矩阵是奇异的
-                if (A_copy(maxRow, k) <= Constants::epsilon)
+                if (abs(A_copy(maxRow, k)) <= Constants::epsilon)
                 {
                     result.isSingular = true;
                     return result;
                 }
 
-                // 交换行
+                // 2. 交换行（A、P、L的已知部分）
                 if (maxRow != k)
                 {
                     for (size_t j = 0; j < N; ++j)
                     {
                         swap(A_copy(k, j), A_copy(maxRow, j));
                         swap(result.P(k, j), result.P(maxRow, j));
+                        if (j < k)
+                            swap(result.L(k, j), result.L(maxRow, j)); // 只交换已知部分
                     }
                     result.swapCount++;
                 }
 
-                // 计算U的第k行
+                // 3. U的第k行
                 for (size_t j = k; j < N; ++j)
-                {
                     result.U(k, j) = A_copy(k, j);
-                }
 
-                // 计算L的第k列
+                // 4. L的第k列
+                result.L(k, k) = 1; // 对角线始终为1
                 for (size_t i = k + 1; i < N; ++i)
                 {
-                    result.L(i, k) = A_copy(i, k) / A_copy(k, k);
+                    result.L(i, k) = A_copy(i, k) / result.U(k, k);
                     for (size_t j = k; j < N; ++j)
-                    {
                         A_copy(i, j) -= result.L(i, k) * result.U(k, j);
-                    }
                 }
             }
             return result;

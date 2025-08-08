@@ -1,5 +1,6 @@
 #include <iostream>
 #include <functional>
+#include <random>
 #include "OxygenMath.hpp"
 
 using namespace OxygenMath;
@@ -7,11 +8,12 @@ static int test_pass_count = 0;
 void testMatrix();
 void testVector();
 void test2dGeometry();
+void testLUP();
 void myTest();
 int main()
 {
-    auto test_funnctions = {testMatrix, test2dGeometry, testVector};
-    std::vector<std::function<void()>> test_functions{myTest};
+    auto test_funnctions = {testMatrix, test2dGeometry, testVector, myTest};
+    std::vector<std::function<void()>> test_functions{testLUP};
     for (const auto &func : test_functions)
     {
         func();
@@ -130,9 +132,9 @@ void myTest()
                              {1, 3, 4, 2, 1},
                              {2, 1, 3, 4, 2},
                              {3, 4, 2, 1, 3},
-                             {4, 0, 1, 2, 1}}};
-    std::cout << m2 << std::endl;
-    auto PLU = linalg::luDecomposition(m2);
+                             {4, 5, 1, 2, 1}}};
+    std::cout << m3 << std::endl;
+    auto PLU = linalg::luDecomposition(m3);
     std::cout << "L:\n"
               << PLU.L << std::endl;
     std::cout << "U:\n"
@@ -140,11 +142,51 @@ void myTest()
     std::cout << "P:\n"
               << PLU.P << std::endl;
     std::cout << "P*A:\n";
-    std::cout << PLU.P * m2 << std::endl; // P * A
+    std::cout << PLU.P * m3 << std::endl; // P * A
     std::cout << "L * U:\n";
     std::cout << PLU.L * PLU.U << std::endl; // L * U
 
-    // std::cout << linalg::determinant(m3) << std::endl;
+     std::cout << linalg::determinant(m3) << std::endl;
     // std::cout << linalg::inverse(m3) << std::endl;
     std::cout << "=========My Test end=========" << std::endl;
+}
+
+void testLUP()
+{
+    std::cout << "=========LUPTest=========" << std::endl;
+    constexpr size_t N = 100;
+    std::mt19937 gen(1); // 固定种子保证可复现
+    std::uniform_real_distribution<double> dis(-10.0, 10.0);
+
+    for (int t = 0; t < 100; ++t) // 生成100组测试
+    {
+        MatrixNM<Real, N, N> A;
+        for (size_t i = 0; i < N; ++i)
+            for (size_t j = 0; j < N; ++j)
+                A(i, j) = dis(gen);
+
+        auto PLU = linalg::luDecomposition(A);
+
+        auto PA = PLU.P * A;
+        auto LU = PLU.L * PLU.U;
+
+        bool ok = true;
+        for (size_t i = 0; i < N; ++i)
+            for (size_t j = 0; j < N; ++j)
+                if (abs(PA(i, j) - LU(i, j)) > Constants::epsilon)
+                    ok = false;
+
+        std::cout << "Test #" << t + 1 << ": " << (ok ? "PASS" : "FAIL") << std::endl;
+        if (!ok)
+        {
+            std::cout << "A:\n"
+                      << A << "\n";
+            std::cout << "P*A:\n"
+                      << PA << "\n";
+            std::cout << "L*U:\n"
+                      << LU << "\n";
+        }
+    }
+    std::cout << "=========LUPTest End=========" << std::endl;
+    test_pass_count++;
 }
