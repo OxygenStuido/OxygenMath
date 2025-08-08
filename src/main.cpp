@@ -10,10 +10,11 @@ void testVector();
 void test2dGeometry();
 void testLUP();
 void myTest();
+void testInverseAndDeterminant();
 int main()
 {
     auto test_funnctions = {testMatrix, test2dGeometry, testVector, myTest};
-    std::vector<std::function<void()>> test_functions{testLUP};
+    std::vector<std::function<void()>> test_functions{testLUP, testInverseAndDeterminant};
     for (const auto &func : test_functions)
     {
         func();
@@ -121,35 +122,6 @@ void testVector()
     std::cout << "=========Vector test=========" << std::endl;
     test_pass_count++;
 }
-void myTest()
-{
-    std::cout << "=========My Test=========" << std::endl;
-    MatrixNM<Real, 3, 3> m1{{{1.0, 2.0, 3.0}, {4.0, 1.0, 6.0}, {7.0, 8.0, 9.0}}};
-    std::cout << linalg::determinant(m1) << std::endl;
-    MatrixNM<Real, 2, 2> m2{{{1.0, 2.0}, {3.0, 4.0}}};
-    std::cout << linalg::determinant(m2) << std::endl;
-    MatrixNM<Real, 5, 5> m3{{{0, 2, 1, 3, 4},
-                             {1, 3, 4, 2, 1},
-                             {2, 1, 3, 4, 2},
-                             {3, 4, 2, 1, 3},
-                             {4, 5, 1, 2, 1}}};
-    std::cout << m3 << std::endl;
-    auto PLU = linalg::luDecomposition(m3);
-    std::cout << "L:\n"
-              << PLU.L << std::endl;
-    std::cout << "U:\n"
-              << PLU.U << std::endl;
-    std::cout << "P:\n"
-              << PLU.P << std::endl;
-    std::cout << "P*A:\n";
-    std::cout << PLU.P * m3 << std::endl; // P * A
-    std::cout << "L * U:\n";
-    std::cout << PLU.L * PLU.U << std::endl; // L * U
-
-     std::cout << linalg::determinant(m3) << std::endl;
-    // std::cout << linalg::inverse(m3) << std::endl;
-    std::cout << "=========My Test end=========" << std::endl;
-}
 
 void testLUP()
 {
@@ -188,5 +160,87 @@ void testLUP()
         }
     }
     std::cout << "=========LUPTest End=========" << std::endl;
+    test_pass_count++;
+}
+void myTest()
+{
+    std::cout << "=========My Test=========" << std::endl;
+    MatrixNM<Real, 3, 3> m1{{{1.0, 2.0, 3.0}, {4.0, 1.0, 6.0}, {7.0, 8.0, 9.0}}};
+    std::cout << linalg::determinant(m1) << std::endl;
+    MatrixNM<Real, 2, 2> m2{{{1.0, 2.0}, {3.0, 4.0}}};
+    std::cout << linalg::determinant(m2) << std::endl;
+    MatrixNM<Real, 5, 5> m3{{{0, 2, 1, 3, 4},
+                             {1, 3, 4, 2, 1},
+                             {2, 1, 3, 4, 2},
+                             {3, 4, 2, 1, 3},
+                             {4, 5, 1, 2, 1}}};
+    std::cout << m3 << std::endl;
+    auto PLU = linalg::luDecomposition(m3);
+    std::cout << "L:\n"
+              << PLU.L << std::endl;
+    std::cout << "U:\n"
+              << PLU.U << std::endl;
+    std::cout << "P:\n"
+              << PLU.P << std::endl;
+    std::cout << "P*A:\n";
+    std::cout << PLU.P * m3 << std::endl; // P * A
+    std::cout << "L * U:\n";
+    std::cout << PLU.L * PLU.U << std::endl; // L * U
+
+    std::cout << linalg::determinant(m3) << std::endl;
+    // std::cout << linalg::inverse(m3) << std::endl;
+    std::cout << "=========My Test end=========" << std::endl;
+}
+
+void testInverseAndDeterminant()
+{
+    std::cout << "=========Inverse & Determinant Test=========" << std::endl;
+    constexpr size_t N = 5;
+    std::mt19937 gen(123);
+    std::uniform_real_distribution<double> dis(-10.0, 10.0);
+
+    for (int t = 0; t < 10; ++t)
+    {
+        MatrixNM<Real, N, N> A;
+        for (size_t i = 0; i < N; ++i)
+            for (size_t j = 0; j < N; ++j)
+                A(i, j) = dis(gen);
+
+        Real det = linalg::determinant(A);
+        bool singular = abs(det) < Constants::epsilon;
+
+        std::cout << "Test #" << t + 1 << " det=" << det << std::endl;
+
+        if (!singular)
+        {
+            auto invA = linalg::inverse(A);
+            auto prod = A * invA;
+
+            // 检查是否接近单位矩阵
+            bool ok = true;
+            for (size_t i = 0; i < N; ++i)
+                for (size_t j = 0; j < N; ++j)
+                {
+                    Real expected = (i == j) ? 1.0 : 0.0;
+                    if (abs(prod(i, j) - expected) > Constants::epsilon)
+                        ok = false;
+                }
+            std::cout << "Inverse test: " << (ok ? "PASS" : "FAIL") << std::endl;
+            if (!ok)
+            {
+                std::cout << "A:\n"
+                          << A << "\n";
+                std::cout << "A^-1:\n"
+                          << invA << "\n";
+                std::cout << "A * A^-1:\n"
+                          << prod << "\n";
+            }
+        }
+        else
+        {
+            std::cout << "Matrix is singular, skip inverse test." << std::endl;
+        }
+    }
+    std::cout << "=========Inverse & Determinant Test End=========" << std::endl;
     test_pass_count++;
 }

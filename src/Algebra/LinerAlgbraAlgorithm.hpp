@@ -113,6 +113,52 @@ namespace OxygenMath
                    A_input(0, 2) * (A_input(1, 0) * A_input(2, 1) - A_input(1, 1) * A_input(2, 0));
         }
 
+        template <typename T, size_t N>
+        MatrixNM<T, N, N> inverse(const MatrixNM<T, N, N> &A)
+        {
+            auto lup = luDecomposition(A);
+            if (lup.isSingular)
+                throw std::runtime_error("Matrix is singular.");
+
+            MatrixNM<T, N, N> inv;
+
+            for (size_t col = 0; col < N; ++col)
+            {
+                // 单位向量 e
+                MatrixNM<T, N, 1> e;
+                for (size_t i = 0; i < N; ++i)
+                    e(i, 0) = (i == col) ? T::identity() : T::zero();
+
+                // 右端项 b = P * e
+                MatrixNM<T, N, 1> b;
+                b = lup.P * e;
+
+                // 解 L*y = b（前向替换）
+                MatrixNM<T, N, 1> y;
+                for (size_t i = 0; i < N; ++i)
+                {
+                    T sum = b(i, 0);
+                    for (size_t j = 0; j < i; ++j)
+                        sum -= lup.L(i, j) * y(j, 0);
+                    y(i, 0) = sum / lup.L(i, i);
+                }
+
+                // 解 U*x = y（后向替换）
+                MatrixNM<T, N, 1> x;
+                for (int i = N - 1; i >= 0; --i)
+                {
+                    T sum = y(i, 0);
+                    for (size_t j = i + 1; j < N; ++j)
+                        sum -= lup.U(i, j) * x(j, 0);
+                    x(i, 0) = sum / lup.U(i, i);
+                }
+
+                for (size_t row = 0; row < N; ++row)
+                    inv(row, col) = x(row, 0);
+            }
+            return inv;
+        }
+
         template <typename T>
         MatrixNM<T, 2, 2> inverse(const MatrixNM<T, 2, 2> &A)
         {
