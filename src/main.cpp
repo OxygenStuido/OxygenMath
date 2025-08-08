@@ -206,14 +206,15 @@ void testInverseAndDeterminant()
             for (size_t j = 0; j < N; ++j)
                 A(i, j) = dis(gen);
 
-        Real det = linalg::determinant(A);
+        auto lup = linalg::luDecomposition(A);
+        Real det = linalg::determinant(lup);
         bool singular = abs(det) < Constants::epsilon;
 
         std::cout << "Test #" << t + 1 << " det=" << det << std::endl;
 
         if (!singular)
         {
-            auto invA = linalg::inverse(A);
+            auto invA = linalg::inverse(lup);
             auto prod = A * invA;
 
             // 检查是否接近单位矩阵
