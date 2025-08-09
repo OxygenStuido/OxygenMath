@@ -22,6 +22,14 @@ namespace OxygenMath
     {
     };
 
+    /**
+     * @brief 矩阵基类，使用CRTP实现静态多态
+     *
+     * 该类为所有矩阵类型提供统一的接口和基本运算操作。
+     * 通过CRTP模式避免虚函数调用开销，同时实现代码复用。
+     *
+     * @tparam Derived 派生类类型，必须继承自MatrixBase
+     */
     template <typename Derived>
     class MatrixBase
     {

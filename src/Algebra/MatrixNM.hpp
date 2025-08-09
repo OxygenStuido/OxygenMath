@@ -41,7 +41,6 @@ namespace OxygenMath
                 }
             }
         }
-
         T &operator()(size_t row, size_t col)
         {
             return data[row * Cols + col];

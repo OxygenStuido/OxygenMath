@@ -28,7 +28,17 @@ namespace OxygenMath
                 }
             }
         };
-
+        /**
+         * @brief 对给定的方阵进行LU分解（带部分主元的LUP分解）
+         *
+         * 该函数使用部分主元法对输入矩阵A进行LU分解，得到一个下三角矩阵L、
+         * 上三角矩阵U以及行交换信息P，满足 PA = LU。
+         *
+         * @tparam T 矩阵元素的数据类型
+         * @tparam N 矩阵的维度大小
+         * @param A 输入的N×N方阵
+         * @return LUPResult<T, N> 包含L、U、P矩阵以及是否奇异等信息的结果结构体
+         */
         template <typename T, size_t N>
         LUPResult<T, N> luDecomposition(const MatrixNM<T, N, N> &A)
         {
@@ -79,6 +89,12 @@ namespace OxygenMath
             return result;
         }
 
+        /**
+         * 计算方阵的行列式值
+         * 使用LU分解方法计算N×N矩阵的行列式
+         * @param A_input 输入的N×N方阵
+         * @return 矩阵的行列式值，如果矩阵奇异则返回0
+         */
         template <typename T, size_t N>
         T determinant(const MatrixNM<T, N, N> &A_input)
         {
@@ -100,6 +116,11 @@ namespace OxygenMath
             return sign * detU;
         }
 
+        /**
+         * @brief 计算矩阵的行列式值
+         * @param result LUP分解的结果，包含L、U矩阵以及相关的分解信息
+         * @return 返回矩阵的行列式值，若矩阵奇异则返回0
+         */
         template <typename T, size_t N>
         T determinant(const LUPResult<T, N> &result)
         {
@@ -119,12 +140,26 @@ namespace OxygenMath
             return sign * detU;
         }
 
+        /**
+         * @brief 计算2x2矩阵的行列式
+         *
+         * @param A 输入的2x2矩阵
+         * @return T 返回矩阵A的行列式值
+         */
         template <typename T>
         T determinant(const MatrixNM<T, 2, 2> &A)
         {
             return A(0, 0) * A(1, 1) - A(0, 1) * A(1, 0);
         }
 
+        /**
+         * @brief 计算3x3矩阵的行列式
+         *
+         * 使用标准的3x3矩阵行列式计算公式，按第一行展开计算
+         *
+         * @param A_input 输入的3x3矩阵
+         * @return T 返回计算得到的行列式值
+         */
         template <typename T>
         T determinant(const MatrixNM<T, 3, 3> &A_input)
         {
@@ -133,6 +168,30 @@ namespace OxygenMath
                    A_input(0, 2) * (A_input(1, 0) * A_input(2, 1) - A_input(1, 1) * A_input(2, 0));
         }
 
+        /**
+         * @brief 计算4x4矩阵的行列式
+         *
+         * @param A 输入的4x4矩阵
+         * @return T 矩阵的行列式值
+         */
+        template <typename T>
+        T determinant(const MatrixNM<T, 4, 4> &A)
+        {
+            return A(0, 0) * (A(1, 1) * (A(2, 2) * A(3, 3) - A(2, 3) * A(3, 2)) - A(1, 2) * (A(2, 1) * A(3, 3) - A(2, 3) * A(3, 1)) + A(1, 3) * (A(2, 1) * A(3, 2) - A(2, 2) * A(3, 1))) -
+                   A(0, 1) * (A(1, 0) * (A(2, 2) * A(3, 3) - A(2, 3) * A(3, 2)) - A(1, 2) * (A(2, 0) * A(3, 3) - A(2, 3) * A(3, 0)) + A(1, 3) * (A(2, 0) * A(3, 2) - A(2, 2) * A(3, 0))) +
+                   A(0, 2) * (A(1, 0) * (A(2, 1) * A(3, 3) - A(2, 3) * A(3, 1)) - A(1, 1) * (A(2, 0) * A(3, 3) - A(2, 3) * A(3, 0)) + A(1, 3) * (A(2, 0) * A(3, 1) - A(2, 1) * A(3, 0))) -
+                   A(0, 3) * (A(1, 0) * (A(2, 1) * A(3, 2) - A(2, 2) * A(3, 1)) - A(1, 1) * (A(2, 0) * A(3, 2) - A(2, 2) * A(3, 0)) + A(1, 2) * (A(2, 0) * A(3, 1) - A(2, 1) * A(3, 0)));
+        }
+        /**
+         * @brief 计算方阵 A 的逆矩阵
+         *
+         * 使用 LU 分解方法计算给定方阵的逆矩阵。该方法通过求解一系列线性方程组 Ax = e_i，
+         * 其中 e_i 是单位向量，来逐列构造逆矩阵。
+         *
+         * @param A 输入的 N×N 方阵
+         * @return 返回 A 的逆矩阵
+         * @throws std::runtime_error 如果矩阵 A 是奇异的（不可逆）
+         */
         template <typename T, size_t N>
         MatrixNM<T, N, N> inverse(const MatrixNM<T, N, N> &A)
         {
@@ -178,6 +237,20 @@ namespace OxygenMath
             }
             return inv;
         }
+
+        /**
+         * @brief 计算矩阵的逆矩阵
+         *
+         * 该函数通过 LUP 分解结果求解原矩阵的逆。具体方法是：
+         * 对于单位矩阵的每一列 e_i，求解线性方程 A * x = P * e_i，
+         * 其中 A = L * U（LUP 分解结果），P 是置换矩阵。
+         * 通过前向替换解 L * y = P * e_i，再通过后向替换解 U * x = y，
+         * 得到的 x 即为逆矩阵的第 i 列。
+         *
+         * @param A LUP 分解结果，包含 L、U 矩阵和置换矩阵 P
+         * @return MatrixNM<T, N, N> 原矩阵的逆矩阵
+         * @throws std::runtime_error 如果矩阵奇异（不可逆）
+         */
         template <typename T, size_t N>
         MatrixNM<T, N, N> inverse(const LUPResult<T, N> &A)
         {
@@ -223,6 +296,13 @@ namespace OxygenMath
             }
             return inv;
         }
+
+        /**
+         * @brief 2x2矩阵的逆矩阵计算
+         *
+         * @param A 输入的2x2矩阵
+         * @return MatrixNM<T, 2, 2> 逆矩阵
+         */
         template <typename T>
         MatrixNM<T, 2, 2> inverse(const MatrixNM<T, 2, 2> &A)
         {
@@ -232,13 +312,21 @@ namespace OxygenMath
                 throw std::runtime_error("2x2 Matrix is singular.");
             }
             MatrixNM<T, 2, 2> inv;
-            inv(0, 0) = A(1, 1) / det;
-            inv(0, 1) = -A(0, 1) / det;
-            inv(1, 0) = -A(1, 0) / det;
-            inv(1, 1) = A(0, 0) / det;
+            inv(0, 0) = A(1, 1);
+            inv(0, 1) = -A(0, 1);
+            inv(1, 0) = -A(1, 0);
+            inv(1, 1) = A(0, 0);
+            auto inv_det = T::identity() / det;
+            inv = inv * inv_det;
             return inv;
         }
 
+        /**
+         * @brief 3x3矩阵的逆矩阵计算
+         *
+         * @param A 输入的3x3矩阵
+         * @return MatrixNM<T, 3, 3> 逆矩阵
+         */
         template <typename T>
         MatrixNM<T, 3, 3> inverse(const MatrixNM<T, 3, 3> &A)
         {
@@ -248,17 +336,20 @@ namespace OxygenMath
                 throw std::runtime_error("3x3 Matrix is singular.");
             }
             MatrixNM<T, 3, 3> inv;
-            inv(0, 0) = (A(1, 1) * A(2, 2) - A(1, 2) * A(2, 1)) / det;
-            inv(0, 1) = (A(0, 2) * A(2, 1) - A(0, 1) * A(2, 2)) / det;
-            inv(0, 2) = (A(0, 1) * A(1, 2) - A(0, 2) * A(1, 1)) / det;
-            inv(1, 0) = (A(1, 2) * A(2, 0) - A(1, 0) * A(2, 2)) / det;
-            inv(1, 1) = (A(0, 0) * A(2, 2) - A(0, 2) * A(2, 0)) / det;
-            inv(1, 2) = (A(0, 2) * A(1, 0) - A(0, 0) * A(1, 2)) / det;
-            inv(2, 0) = (A(1, 0) * A(2, 1) - A(1, 1) * A(2, 0)) / det;
-            inv(2, 1) = (A(0, 1) * A(2, 0) - A(0, 0) * A(2, 1)) / det;
-            inv(2, 2) = (A(0, 0) * A(1, 1) - A(0, 1) * A(1, 0)) / det;
+            inv(0, 0) = (A(1, 1) * A(2, 2) - A(1, 2) * A(2, 1));
+            inv(0, 1) = (A(0, 2) * A(2, 1) - A(0, 1) * A(2, 2));
+            inv(0, 2) = (A(0, 1) * A(1, 2) - A(0, 2) * A(1, 1));
+            inv(1, 0) = (A(1, 2) * A(2, 0) - A(1, 0) * A(2, 2));
+            inv(1, 1) = (A(0, 0) * A(2, 2) - A(0, 2) * A(2, 0));
+            inv(1, 2) = (A(0, 2) * A(1, 0) - A(0, 0) * A(1, 2));
+            inv(2, 0) = (A(1, 0) * A(2, 1) - A(1, 1) * A(2, 0));
+            inv(2, 1) = (A(0, 1) * A(2, 0) - A(0, 0) * A(2, 1));
+            inv(2, 2) = (A(0, 0) * A(1, 1) - A(0, 1) * A(1, 0));
+            auto inv_det = T::identity() / det;
+            inv = inv * inv_det;
             return inv;
         }
+
     }
 
 }
