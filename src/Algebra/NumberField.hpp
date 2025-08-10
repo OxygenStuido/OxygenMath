@@ -84,6 +84,7 @@ namespace OxygenMath
         bool operator<=(const Real &rhs) const { return data <= rhs.data; }
         bool operator<(const Real &rhs) const { return data < rhs.data; }
         bool operator==(const Real &rhs) const { return data == rhs.data; }
+        bool operator!=(const Real &rhs) const { return data != rhs.data; }
         friend Real operator-(const Real &real) { return Real(-real.data); }
 
         // 支持 sqrt() 函数以提供L2范数

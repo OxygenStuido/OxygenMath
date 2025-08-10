@@ -27,6 +27,13 @@ namespace OxygenMath
     public:
         MatrixNM() : data(Rows * Cols, T::zero()) {}
 
+        template <typename Expr>
+        MatrixNM(const Expr &expr)
+        {
+            for (size_t i = 0; i < Rows; ++i)
+                for (size_t j = 0; j < Cols; ++j)
+                    data[i * Cols + j] = expr(i, j);
+        }
         MatrixNM(const std::initializer_list<std::initializer_list<T>> &init)
         {
             if (init.size() != Rows || (init.size() > 0 && init.begin()->size() != Cols))

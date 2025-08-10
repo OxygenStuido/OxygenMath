@@ -20,6 +20,12 @@ namespace OxygenMath
                 data[i] = T::zero();
         }
 
+        template <typename Expr>
+        VectorN(const Expr &expr)
+        {
+            for (size_t i = 0; i < N; ++i)
+                data[i] = expr(i, 0);
+        }
         VectorN(std::initializer_list<T> init)
         {
             if (init.size() != N)

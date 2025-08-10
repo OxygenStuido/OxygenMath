@@ -1,6 +1,7 @@
 #pragma once
 #include "AlgebraTool.hpp"
 #include "MatrixNM.hpp"
+#include "VectorN.hpp"
 namespace OxygenMath
 {
     namespace linalg
@@ -348,6 +349,43 @@ namespace OxygenMath
             auto inv_det = T::identity() / det;
             inv = inv * inv_det;
             return inv;
+        }
+
+        /**
+         * @brief 高斯-赛德尔迭代法求解线性方程组 Ax = b
+         * @param A 系数矩阵（N×N）
+         * @param b 常数向量（N维）
+         * @param x0 初始解（N维）
+         * @param maxIter 最大迭代次数
+         * @param tol 收敛容差
+         * @return VectorN<T, N> 迭代得到的解
+         */
+        template <typename T, size_t N>
+        VectorN<T, N> gaussSeidel(const MatrixNM<T, N, N> &A, const VectorN<T, N> &b,
+                                  const VectorN<T, N> &x0, size_t maxIter = 1000, T tol = Constants::epsilon)
+        {
+            VectorN<T, N> x = x0;
+            for (size_t iter = 0; iter < maxIter; ++iter)
+            {
+                VectorN<T, N> x_old = x;
+                for (size_t i = 0; i < N; ++i)
+                {
+                    T sum = b(i);
+                    for (size_t j = 0; j < N; ++j)
+                    {
+                        if (j != i)
+                            sum -= A(i, j) * x(j);
+                    }
+                    x(i) = sum / A(i, i);
+                }
+                // 检查收敛
+                T err = T::zero();
+                for (size_t k = 0; k < N; ++k)
+                    err += abs(x(k) - x_old(k));
+                if (err < tol)
+                    break;
+            }
+            return x;
         }
 
     }

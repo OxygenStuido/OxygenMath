@@ -11,10 +11,11 @@ void test2dGeometry();
 void testLUP();
 void myTest();
 void testInverseAndDeterminant();
+void testGaussSeidel();
 int main()
 {
-    auto test_funnctions = {testMatrix, test2dGeometry, testVector, testLUP, testInverseAndDeterminant};
-    std::vector<std::function<void()>> test_functions{myTest};
+    auto test_funnctions = {testMatrix, test2dGeometry, testVector, testLUP, myTest, testInverseAndDeterminant};
+    std::vector<std::function<void()>> test_functions{testGaussSeidel};
     for (const auto &func : test_functions)
     {
         func();
@@ -176,7 +177,30 @@ void myTest()
 
     std::cout << "=========My Test end=========" << std::endl;
 }
+void testGaussSeidel()
+{
+    std::cout << "=========Gauss-Seidel Test=========" << std::endl;
+    constexpr size_t N = 3;
+    MatrixNM<Real, N, N> A{{{4.0, 1.0, 2.0}, {3.0, 5.0, 1.0}, {1.0, 1.0, 3.0}}};
+    VectorN<Real, N> b{4.0, 7.0, 3.0};
+    VectorN<Real, N> x0{0.0, 0.0, 0.0};
 
+    auto x = linalg::gaussSeidel(A, b, x0, 100, Real(1e-8));
+    std::cout << "Solution x:\n"
+              << x << std::endl;
+
+    // 验证 Ax ≈ b
+    VectorN<Real, N> b_calc = A * x;
+    std::cout << "A * x:\n"
+              << b_calc << std::endl;
+    bool ok = true;
+    for (size_t i = 0; i < N; ++i)
+        if (abs(b_calc(i) - b(i)) > 1e-6)
+            ok = false;
+    std::cout << "Gauss-Seidel test: " << (ok ? "PASS" : "FAIL") << std::endl;
+    std::cout << "=========Gauss-Seidel Test End=========" << std::endl;
+    test_pass_count++;
+}
 void testInverseAndDeterminant()
 {
     std::cout << "=========Inverse & Determinant Test=========" << std::endl;
