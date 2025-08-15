@@ -172,4 +172,18 @@ namespace OxygenMath
         return Complex(r * std::cos(theta), r * std::sin(theta));
     }
 
+    Complex exp(const Complex &num)
+    {
+        double r = std::exp(num.real);
+        double theta = num.imag;
+        return Complex(r * std::cos(theta), r * std::sin(theta));
+    }
+
+    Complex log(const Complex &num)
+    {
+        if (num.real <= 0.0)
+            throw std::domain_error("Logarithm undefined for non-positive values");
+        return Complex(std::log(std::sqrt(num.real * num.real + num.imag * num.imag)), std::atan2(num.imag, num.real));
+    }
+
 }

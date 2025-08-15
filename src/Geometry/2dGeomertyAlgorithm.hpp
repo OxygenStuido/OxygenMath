@@ -96,7 +96,7 @@ namespace OxygenMath
          * @param p3 第三个顶点
          * @return 返回三角形的面积
          */
-        static inline Real area(const Vec2 &p1, const Vec2 &p2, const Vec2 &p3)
+        static inline Real tirangleArea(const Vec2 &p1, const Vec2 &p2, const Vec2 &p3)
         {
             return Real(0.5) * abs((p2(0) - p1(0)) * (p3(1) - p1(1)) - (p3(0) - p1(0)) * (p2(1) - p1(1)));
         }
@@ -111,7 +111,7 @@ namespace OxygenMath
          * @param p3 第3个顶点
          * @return 获取三角形的周长
          */
-        static inline Real perimeter(const Vec2 &p1, const Vec2 &p2, const Vec2 &p3)
+        static inline Real tiranglePerimeter(const Vec2 &p1, const Vec2 &p2, const Vec2 &p3)
         {
             return distance(p1, p2) + distance(p2, p3) + distance(p3, p1);
         }
@@ -127,7 +127,7 @@ namespace OxygenMath
          * @param linePoint2 直线上的第二个点坐标
          * @return 返回点到直线的垂直距离，结果为非负实数
          */
-        static Real distanceToLine(const Vec2 &point, const Vec2 &linePoint1, const Vec2 &linePoint2)
+        static Real pointToLineDistance(const Vec2 &point, const Vec2 &linePoint1, const Vec2 &linePoint2)
         {
             Real A = linePoint2(1) - linePoint1(1);
             Real B = linePoint1(0) - linePoint2(0);
@@ -135,7 +135,6 @@ namespace OxygenMath
 
             return abs(A * point(0) + B * point(1) + C) / sqrt(A * A + B * B);
         }
-
         /**
          * @brief 获取线段交点
          *
@@ -222,6 +221,34 @@ namespace OxygenMath
             return x1 <= std::max(p3(0), p4(0)) && x2 >= std::min(p3(0), p4(0)) &&
                    y1 <= std::max(p3(1), p4(1)) && y2 >= std::min(p3(1), p4(1));
         }
+
+        /**
+         * @brief 检测一个点是否在给定的轴对齐矩形内
+         *
+         * @param point 待检测的点坐标
+         * @param p1 矩形的第一个顶点坐标
+         * @param p2 矩形的第二个顶点坐标
+         * @return 如果点在矩形内返回true，否则返回false
+         */
+        static inline bool pointInBox(const Vec2 &point, const Vec2 &p1, const Vec2 &p2)
+        {
+            return point(0) >= std::min(p1(0), p2(0)) && point(0) <= std::max(p1(0), p2(0)) &&
+                   point(1) >= std::min(p1(1), p2(1)) && point(1) <= std::max(p1(1), p2(1));
+        }
+
+        /**
+         * @brief 检测一个点是否在给定的圆内
+         *
+         * @param point 待检测的点坐标
+         * @param center 圆的圆心坐标
+         * @param radius 圆的半径
+         * @return 如果点在圆内返回true，否则返回false
+         */
+        static inline bool pointInCircle(const Vec2 &point, const Vec2 &center, Real radius)
+        {
+            return distance(point, center) <= radius;
+        }
+
     } // namespace Geometry2DAlgorithm
 
 } // namespace OxygenMath

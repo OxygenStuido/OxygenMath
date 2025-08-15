@@ -4,7 +4,7 @@
 #include "VectorN.hpp"
 namespace OxygenMath
 {
-    namespace linalg
+    namespace LinAlg
     {
         template <typename T, size_t N>
         struct LUPResult

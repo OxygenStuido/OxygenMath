@@ -167,19 +167,6 @@ namespace OxygenMath
             return result;
         }
 
-        // MatrixNM inverse() const
-        // {
-        //     T det = determinant();
-        //     if (det == T::zero())
-        //     {
-        //         throw std::runtime_error("Matrix is singular and cannot be inverted");
-        //     }
-        //     T inv_det = T::identity() / det;
-        //     return MatrixNM(
-        //         data[3] * inv_det, -data[1] * inv_det,
-        //         -data[2] * inv_det, data[0] * inv_det);
-        // }
-
         template <typename Expr>
         MatrixNM &operator=(const Expr &expr)
         {
@@ -257,29 +244,6 @@ namespace OxygenMath
             }
             return result;
         }
-
-        // MatrixNM inverse() const
-        // {
-        //     T det = determinant();
-        //     if (det == T::zero())
-        //     {
-        //         throw std::runtime_error("Matrix is singular and cannot be inverted");
-        //     }
-        //     T inv_det = T::identity() / det;
-
-        //     return MatrixNM(
-        //         (data[4] * data[8] - data[5] * data[7]) * inv_det,
-        //         (data[2] * data[7] - data[1] * data[8]) * inv_det,
-        //         (data[1] * data[5] - data[2] * data[4]) * inv_det,
-
-        //         (data[5] * data[6] - data[3] * data[8]) * inv_det,
-        //         (data[0] * data[8] - data[2] * data[6]) * inv_det,
-        //         (data[2] * data[3] - data[0] * data[5]) * inv_det,
-
-        //         (data[3] * data[7] - data[4] * data[6]) * inv_det,
-        //         (data[1] * data[6] - data[0] * data[7]) * inv_det,
-        //         (data[0] * data[4] - data[1] * data[3]) * inv_det);
-        // }
 
         template <typename Expr>
         MatrixNM &operator=(const Expr &expr)

@@ -138,7 +138,7 @@ void testLUP()
             for (size_t j = 0; j < N; ++j)
                 A(i, j) = dis(gen);
 
-        auto PLU = linalg::luDecomposition(A);
+        auto PLU = LinAlg::luDecomposition(A);
 
         auto PA = PLU.P * A;
         auto LU = PLU.L * PLU.U;
@@ -167,12 +167,12 @@ void myTest()
 {
     std::cout << "=========My Test=========" << std::endl;
     MatrixNM<Real, 3, 3> m1{{{1.0, 2.0, 3.0}, {4.0, 1.0, 6.0}, {7.0, 8.0, 9.0}}};
-    std::cout << linalg::determinant(m1) << std::endl;
-    auto inv3 = linalg::inverse(m1);
+    std::cout << LinAlg::determinant(m1) << std::endl;
+    auto inv3 = LinAlg::inverse(m1);
     std::cout << inv3 << std::endl;
     MatrixNM<Real, 2, 2> m2{{{1.0, 2.0}, {3.0, 4.0}}};
-    std::cout << linalg::determinant(m2) << std::endl;
-    auto inv2 = linalg::inverse(m2);
+    std::cout << LinAlg::determinant(m2) << std::endl;
+    auto inv2 = LinAlg::inverse(m2);
     std::cout << inv2 << std::endl;
 
     std::cout << "=========My Test end=========" << std::endl;
@@ -185,7 +185,7 @@ void testGaussSeidel()
     VectorN<Real, N> b{4.0, 7.0, 3.0};
     VectorN<Real, N> x0{0.0, 0.0, 0.0};
 
-    auto x = linalg::gaussSeidel(A, b, x0, 100, Real(1e-8));
+    auto x = LinAlg::gaussSeidel(A, b, x0);
     std::cout << "Solution x:\n"
               << x << std::endl;
 
@@ -215,15 +215,15 @@ void testInverseAndDeterminant()
             for (size_t j = 0; j < N; ++j)
                 A(i, j) = dis(gen);
 
-        auto lup = linalg::luDecomposition(A);
-        Real det = linalg::determinant(lup);
+        auto lup = LinAlg::luDecomposition(A);
+        Real det = LinAlg::determinant(lup);
         bool singular = abs(det) < Constants::epsilon;
 
         std::cout << "Test #" << t + 1 << " det=" << det << std::endl;
 
         if (!singular)
         {
-            auto invA = linalg::inverse(lup);
+            auto invA = LinAlg::inverse(lup);
             auto prod = A * invA;
 
             // 检查是否接近单位矩阵
