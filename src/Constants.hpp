@@ -11,7 +11,7 @@ namespace OxygenMath
         constexpr double inf = 1e20;
         constexpr double big_inf = 1e30;
         constexpr double nan = 0.0 / 0.0;
-        constexpr double sqrt_2 = 1.4142135623730950488016887;
-        constexpr double sqrt_3 = 1.7320508075688772935274463;
+        constexpr double sqrt_2 = 1.414213562373095;
+        constexpr double sqrt_3 = 1.732050807568877;
     }
 }
